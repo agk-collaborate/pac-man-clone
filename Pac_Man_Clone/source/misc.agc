@@ -12,6 +12,9 @@ PURPOSE:
 
 DOCUMENTATION:
 	void <-- Print_Debug(state)
+	
+	float <-- resx(_scalar#)
+	float <-- resy(_scalar#)
 
 FUNCTIONS:
 	
@@ -42,3 +45,16 @@ function Print_Debug(state)
 		
 	endif
 endfunction
+
+
+
+
+// Returns a percentage of the resolution x axis.
+// _scalar# = 0.0 to 1.0
+function resx(_scalar#)
+endfunction res.x * _scalar#
+
+// Returns a percentage of the resolution y axis.
+// _scalar# = 0.0 to 1.0
+function resy(_scalar#)
+endfunction res.y * _scalar#

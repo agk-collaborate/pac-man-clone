@@ -48,8 +48,12 @@ output_path=
 FILE_0=main.agc;-1
 FILE_1=source%2Fvector2.agc;-1
 FILE_2=source%2Fmisc.agc;-1
+FILE_3=source%2FmainMenu.agc;-1
+FILE_4=source%2Fmap.agc;-1
 [files]
-FILE_NAME_0=1;main.agc;21;0
-FILE_NAME_1=0;source%2Fvector2.agc;1;1
-FILE_NAME_2=0;source%2Fmisc.agc;0;2
+FILE_NAME_0=0;main.agc;58;0
+FILE_NAME_1=0;source%2Fvector2.agc;22;1
+FILE_NAME_2=0;source%2Fmisc.agc;50;2
+FILE_NAME_3=1;source%2FmainMenu.agc;66;3
+FILE_NAME_4=0;source%2Fmap.agc;0;4
 [watchvariables]

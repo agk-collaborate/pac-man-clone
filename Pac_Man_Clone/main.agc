@@ -4,6 +4,8 @@
 
 #include "source/misc.agc"
 #include "source/vector2.agc"
+#include "source/mainMenu.agc"
+#include "source/map.agc"
 
 
 
@@ -13,6 +15,7 @@ res.x = GetMaxDeviceWidth() : res.y = GetMaxDeviceHeight()
 global SyncRate as float = 60.0
 global fullscreen as integer = FALSE
 global PrintSize as float = 36.0
+global AppState as integer = 0
 
 
 
@@ -39,13 +42,30 @@ SetPrintSize(PrintSize)
 
 
 
+MainMenu_Create()
+
+
 
 do
-	
+	UpdateApp(AppState)
 	
 	Print_Debug(TRUE)
 	
 	Sync()
 loop
+
+
+// This will control what state the app is in.
+// Case 0 is main menu.
+// Case 1 is game.
+function UpdateApp(state)
+	select state
+		case 0:
+			MainMenu_Update()
+		endcase
+		case 1:
+		endcase
+	endselect
+endfunction
 
 
