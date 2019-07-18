@@ -43,6 +43,7 @@ function Print_Debug(state)
 		
 		PrintC("Vitrual Resolution: ") : Print(vec2_str(res, 0))
 		
+		PrintAllCells()
 	endif
 endfunction
 
@@ -58,3 +59,9 @@ endfunction res.x * _scalar#
 // _scalar# = 0.0 to 1.0
 function resy(_scalar#)
 endfunction res.y * _scalar#
+
+
+
+function DrawRange(_pos as t_Vector_2, _size as t_Vector_2, _clr1, _clr2, _clr3, _clr4, _solid)
+	DrawBox(_pos.x, _pos.y, _pos.x + _size.x, _pos.y + _size.y, _clr1, _clr2, _clr3, _clr4, _solid)
+endfunction

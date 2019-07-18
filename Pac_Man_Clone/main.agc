@@ -7,7 +7,8 @@
 #include "source/mainMenu.agc"
 #include "source/map.agc"
 
-
+#constant APPSTATE_MAINMENU	0
+#constant APPSTATE_GAME		1
 
 global res as t_Vector_2
 res.x = GetMaxDeviceWidth() : res.y = GetMaxDeviceHeight()
@@ -38,15 +39,19 @@ UseNewDefaultFonts(1)
 SetPrintColor(255, 255, 0)
 SetPrintSize(PrintSize)
 
-
+global clr_white as integer
+global clr_red as integer
+global clr_blue as integer
+clr_white = MakeColor(255, 255, 255)
+clr_red = MakeColor(255, 0, 0)
+clr_blue = MakeColor(0, 0, 255)
 
 
 
 MainMenu_Create()
 
 
-
-do
+do	
 	UpdateApp(AppState)
 	
 	Print_Debug(TRUE)
@@ -60,10 +65,22 @@ loop
 // Case 1 is game.
 function UpdateApp(state)
 	select state
-		case 0:
+		case APPSTATE_MAINMENU:
 			MainMenu_Update()
+			if GetRawKeyPressed(27) // Escape
+				DeleteAllImages()
+				DeleteAllSprites()
+				DeleteAllText()
+				end
+			endif
 		endcase
-		case 1:
+		case APPSTATE_GAME:
+			DrawAllCells()
+			if GetRawKeyPressed(27) // Escape
+				Map_Delete()
+				MainMenu_Show()
+				AppState = APPSTATE_MAINMENU
+			endif
 		endcase
 	endselect
 endfunction
