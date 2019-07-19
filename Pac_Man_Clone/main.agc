@@ -7,6 +7,7 @@
 #include "source/mainMenu.agc"
 #include "source/map.agc"
 #include "source/ghosts.agc"
+#include "source/pac-man.agc"
 
 #constant APPSTATE_MAINMENU	0
 #constant APPSTATE_GAME		1

@@ -25,3 +25,5 @@ type pacman
 	posY as integer			//Pac-Man's Y position
 	dir as integer				//Pac-Man's facing direction
 endtype
+
+global pacman as pacman
