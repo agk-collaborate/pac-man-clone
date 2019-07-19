@@ -21,9 +21,8 @@ EXAMPLE:
 
 
 type pacman
-	posX as integer			//Pac-Man's X position
-	posY as integer			//Pac-Man's Y position
-	dir as integer				//Pac-Man's facing direction
+	pos as	t_Vector_2			//Pac-Man's position (x and y)
+	dir as integer					//Pac-Man's facing direction
 endtype
 
 global pacman as pacman

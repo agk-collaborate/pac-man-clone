@@ -23,15 +23,12 @@ EXAMPLE:
 
 
 type Ghost
-	posX as integer			//Ghost's X position
-	posY as integer			//Ghost's Y position
-	dir as integer				//Ghost's facing direction
-	house as integer		//If ghost is in the Ghost House or not
-	state as integer			//0 (eaten) / 1 (chase) / 2 (scatter) / 3 (frightened)
-	targetX as integer		//Ghost's target's X position
-	targetY as integer		//Ghost's target's Y position
-	targetHelpX as integer	//Help for the "misalignment" of the target (X)
-	targetHelpY as integer	//Help for the "misalignment" of the target (Y)
+	pos as t_Vector_2			//Ghost's position (x and y)
+	target as t_Vector_2		//Ghost's target's position (x and y)
+	targetHelp as t_Vector_2//Help for the "misalignment" of the target (Y)
+	dir as integer					//Ghost's facing direction
+	house as integer				//If ghost is in the Ghost House or not
+	state as integer				//0 (eaten) / 1 (chase) / 2 (scatter) / 3 (frightened)
 	distToPac as integer		//Ghost's distance to Pac-Man
 endtype
 
@@ -42,21 +39,24 @@ global ghostP as Ghost
 global ghostI as Ghost
 global ghostC as Ghost
 
-
+global BscatterHome as t_Vector_2
+global PscatterHome as t_Vector_2
+global IscatterHome as t_Vector_2
+global CscatterHome as t_Vector_2
 
 function updateScatterHomes()
 	
-	#constant BscatterHomeX = 30 
-	#constant BscatterHomeY = 1
+	BscatterHome.X = 30 
+	BscatterHome.Y = 1
 
-	#constant PscatterHomeX = 1
-	#constant PscatterHomeY = 1
+	PscatterHome.X = 1
+	PscatterHome.Y = 1
 
-	#constant IscatterHomeX = 30
-	#constant IscatterHomeY = 30
+	IscatterHome.X = 30
+	IscatterHome.Y = 30
 
-	#constant CscatterHomeX = 1
-	#constant CscatterHomeY = 30
+	CscatterHome.X = 1
+	CscatterHome.Y = 30
 
 endfunction
 
@@ -67,59 +67,59 @@ function updateGhostTarget()
 	updateScatterHomes()
 	
 	//Blinky
-	ghostB.targetX = pacman.posX
-	ghostP.targetY = pacman.posY
+	ghostB.target.x = pacman.pos.x
+	ghostP.target.y = pacman.pos.y
 	
 	
 	
 	//Pinky
 	if pacman.dir = 0
-		ghostP.targetHelpX = -4
-		ghostP.targetHelpY = -4
+		ghostP.targetHelp.X = -4
+		ghostP.targetHelp.Y = -4
 	elseif pacman.dir = 1
-		ghostP.targetHelpX = 4
-		ghostP.targetHelpY = 0
+		ghostP.targetHelp.X = 4
+		ghostP.targetHelp.Y = 0
 	elseif pacman.dir = 2
-		ghostP.targetHelpX = 0
-		ghostP.targetHelpY = 4
+		ghostP.targetHelp.X = 0
+		ghostP.targetHelp.Y = 4
 	elseif pacman.dir = 3
-		ghostP.targetHelpX = -4
-		ghostP.targetHelpY = 0
+		ghostP.targetHelp.X = -4
+		ghostP.targetHelp.Y = 0
 	endif
 	
-	ghostP.targetX = pacman.posX + ghostP.targetHelpX
-	ghostP.targetY = pacman.posY + ghostP.targetHelpY
+	ghostP.target.X = pacman.pos.X + ghostP.targetHelp.X
+	ghostP.target.Y = pacman.pos.Y + ghostP.targetHelp.Y
 	
 	
 	
 	//Inky
 	if pacman.dir = 0
-		ghostI.targetHelpX = -2
-		ghostI.targetHelpY = -2
+		ghostI.targetHelp.X = -2
+		ghostI.targetHelp.Y = -2
 	elseif pacman.dir = 1
-		ghostI.targetHelpX = 2
-		ghostI.targetHelpY = 0
+		ghostI.targetHelp.X = 2
+		ghostI.targetHelp.Y = 0
 	elseif pacman.dir = 2
-		ghostI.targetHelpX = 0
-		ghostI.targetHelpY = 2
+		ghostI.targetHelp.X = 0
+		ghostI.targetHelp.Y = 2
 	elseif pacman.dir = 3
-		ghostI.targetHelpX = -2
-		ghostI.targetHelpY = 0
+		ghostI.targetHelp.X = -2
+		ghostI.targetHelp.Y = 0
 	endif
 	
-	ghostI.targetHelpX = pacman.posX + ghostI.targetHelpX - ghostB.posX
-	ghostI.targetHelpY = pacman.posY + ghostI.targetHelpY - ghostB.posY
+	ghostI.targetHelp.X = pacman.pos.X + ghostI.targetHelp.X - ghostB.pos.X
+	ghostI.targetHelp.Y = pacman.pos.Y + ghostI.targetHelp.Y - ghostB.pos.Y
 	
 	
 	
 	//Clyde
-	ghostC.distToPac = sqrt(((ghostC.posX - pacman.posX) * (ghostC.posX - pacman.posX)) + ((ghostC.posY - pacman.posY) * (ghostC.posY - pacman.posY)))
+	ghostC.distToPac = vec2_Distance(ghostC.pos, pacman.pos)
 	if  ghostC.distToPac > 8
-		ghostC.targetX = pacman.posX
-		ghostC.targetY = pacman.posY
+		ghostC.target.X = pacman.pos.X
+		ghostC.target.Y = pacman.pos.Y
 	else
-		ghostC.targetX = CscatterHomeX
-		ghostC.targetY = CscatterHomeY
+		ghostC.target.X = CscatterHome.X
+		ghostC.target.Y = CscatterHome.Y
 	endif
 	
 endfunction
