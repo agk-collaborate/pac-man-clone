@@ -6,6 +6,7 @@
 #include "source/vector2.agc"
 #include "source/mainMenu.agc"
 #include "source/map.agc"
+#include "source/ghosts.agc"
 
 #constant APPSTATE_MAINMENU	0
 #constant APPSTATE_GAME		1
