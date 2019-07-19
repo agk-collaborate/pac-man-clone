@@ -76,12 +76,60 @@ function Map_Generate(_seed, _w, _h, _gridSize#)
 		// Create each cell.
 		for i = 0 to map.cells.length - 1
 			for j = 0 to map.cells[i].length - 1
-				map.cells[i,j].cellType = Random(0, 1)
+				map.cells[i,j].cellType = CELLTYPE_WALL
 				map.cells[i,j].size = vec2(map.gridSize, map.gridSize)
 				map.cells[i,j].pos.x = (j * map.cells[i,j].size.x) + map.originPos.x
 				map.cells[i,j].pos.y = (i * map.cells[i,j].size.y) + map.originPos.y
 			next j
 		next i
+		
+		// Get random cell.
+		ix = Random(0, map.width - 1)
+		iy = Random(0, map.height - 1)
+		map.cells[iy,ix].cellType = CELLTYPE_PATH
+		
+		bornTime# = Timer()
+		
+		do
+			if Timer() - bornTime# > 0.01
+				// Choose a random direction.
+				select Random(0,3)
+					case 0: // Up
+						dec iy
+						if iy < 0 then inc iy, 4
+					endcase
+					
+					case 1: // Down
+						inc iy
+						if iy > map.height - 1 then dec iy, 4
+					endcase
+					
+					case 2: // Left
+						dec ix
+						if ix < 0 then inc ix, 4
+					endcase
+					
+					case 3: // Right
+						inc ix
+						if ix > map.width - 1 then dec ix, 4
+					endcase
+				endselect
+				
+				map.cells[iy,ix].cellType = CELLTYPE_PATH
+				bornTime# = Timer()
+			endif
+			
+			DrawAllCells()
+			
+			Print("Press LMB to stop.")
+			printC("ix: ") : print(ix)
+			printC("ix: ") : print(iy)
+			
+			sync()
+			
+			if GetPointerPressed() then exit
+		loop
+		
 	endif
 endfunction
 
@@ -115,10 +163,10 @@ function DrawAllCells()
 			for j = 0 to map.cells[i].length - 1
 				select map.cells[i,j].cellType
 					case CELLTYPE_WALL:
-						DrawRange(map.cells[i,j].pos, map.cells[i,j].size, clr_blue, clr_blue, clr_blue, clr_blue, FALSE)
+						DrawRange(map.cells[i,j].pos, map.cells[i,j].size, clr_blue, clr_blue, clr_blue, clr_blue, TRUE)
 					endcase
 					case CELLTYPE_PATH:
-						DrawRange(map.cells[i,j].pos, map.cells[i,j].size, clr_red, clr_red, clr_red, clr_red, FALSE)
+						DrawRange(map.cells[i,j].pos, map.cells[i,j].size, clr_red, clr_red, clr_red, clr_red, TRUE)
 					endcase
 				endselect
 			next j
@@ -141,6 +189,7 @@ function PrintAllCells()
 		next i
 	endif
 endfunction
+
 
 
 
