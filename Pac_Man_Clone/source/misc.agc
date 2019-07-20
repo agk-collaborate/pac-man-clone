@@ -5,7 +5,7 @@ CONTRIBUTORS:
 	IronManhood
 	
 DATE:
-	last updated 07/18/2019 by IronManhood
+	last updated 07/20/2019 by IronManhood
 	
 PURPOSE:
 	A file for random bits of code.
@@ -15,6 +15,8 @@ DOCUMENTATION:
 	
 	float <-- resx(_scalar#)
 	float <-- resy(_scalar#)
+	
+	void <-- shuffleIntArray(_irr ref as integer[])
 
 FUNCTIONS:
 	
@@ -61,7 +63,25 @@ function resy(_scalar#)
 endfunction res.y * _scalar#
 
 
-
+// A wrapper for using vector2 with draw box.
 function DrawRange(_pos as t_Vector_2, _size as t_Vector_2, _clr1, _clr2, _clr3, _clr4, _solid)
 	DrawBox(_pos.x, _pos.y, _pos.x + _size.x, _pos.y + _size.y, _clr1, _clr2, _clr3, _clr4, _solid)
+endfunction
+
+
+
+// Randomly shuffles an integer array.
+// The larger the array the slower this will be.
+function shuffleIntArray(_irr ref as integer[])
+	_i1 = 0
+	_i2 = 0
+	for i = 1 to _irr.length
+		// Get random indices to swap.
+		do
+			_i1 = Random(0, _irr.length - 1)
+			_i2 = Random(0, _irr.length - 1)
+			if not _i1 = _i2 then exit
+		loop
+		_irr.swap(_i1, _i2)
+	next i
 endfunction

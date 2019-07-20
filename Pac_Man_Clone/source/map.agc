@@ -98,58 +98,67 @@ function Map_Generate(_seed, _w, _h, _gridSize#)
 		
 		bornTime# = Timer()
 		
-		do
-			if Timer() - bornTime# > 0.01
-				bornTime# = Timer()
-				
-				for i = 0 to 1
-					RandomCellMove(curr, prev)
-					
-					map.cells[curr.iy,curr.ix].cellType = CELLTYPE_PATH
-				next i
-			endif
-			
-			DrawAllCells()
-			
-			Print("Press LMB to stop.")
-			PrintCellLoc(curr, "curr")
-			PrintCellLoc(prev, "prev")
-			
-			sync()
-			
-			if GetPointerPressed() then exit
-		loop
-		
+		MapCellRecursion(curr.ix, curr.iy)
 	endif
 endfunction
 
 
-
-// Choose a random direction.
-function RandomCellMove(_current ref as t_Cell_Location, _previous ref as t_Cell_Location)
-	_previous = _current
-	select Random(0,3)
-		case 0: // Up
-			dec _current.iy
-			if _current.iy < 0 then inc _current.iy, 4
-		endcase
-		
-		case 1: // Down
-			inc _current.iy
-			if _current.iy > map.height - 1 then dec _current.iy, 4
-		endcase
-		
-		case 2: // Left
-			dec _current.ix
-			if _current.ix < 0 then inc _current.ix, 4
-		endcase
-		
-		case 3: // Right
-			inc _current.ix
-			if _current.ix > map.width - 1 then dec _current.ix, 4
-		endcase
-	endselect
+// Recursively step through the map.cells array to generate the maze.
+function MapCellRecursion(_h, _v)
+	randos as integer[]
+	randos = generateRandomDirections()
+	
+	for i = 0 to randos.length - 1
+		select randos[i]
+			case 1: // Up
+				if _v - 2 <= 0 then continue
+				if not map.cells[_v - 2,_h].cellType = 1
+					map.cells[_v - 2,_h].cellType = 1
+					map.cells[_v - 1,_h].cellType = 1
+					MapCellRecursion(_h, _v - 2)
+				endif
+			endcase
+			
+			case 2: // Right
+				if _h + 2 >= map.width - 1 then continue
+				if not map.cells[_v,_h + 2].cellType = 1
+					map.cells[_v,_h + 2].cellType = 1
+					map.cells[_v,_h + 1].cellType = 1
+					MapCellRecursion(_h + 2, _v)
+				endif
+			endcase
+			
+			case 3: // Down
+				if _v + 2 >= map.height - 1 then continue
+				if not map.cells[_v + 2,_h].cellType = 1
+					map.cells[_v + 2,_h].cellType = 1
+					map.cells[_v + 1,_h].cellType = 1
+					MapCellRecursion(_h, _v + 2)
+				endif
+			endcase
+			
+			case 4: // Left
+				if _h - 2 <= 0 then continue
+				if not map.cells[_v, _h - 2].cellType = 1
+					map.cells[_v, _h - 2].cellType = 1
+					map.cells[_v, _h - 1].cellType = 1
+					MapCellRecursion(_h - 2, _v)
+				endif
+			endcase
+		endselect
+	next i
 endfunction
+
+
+// Returns a shuffled integer array.
+function generateRandomDirections()
+	arr as integer[]
+	for i = 1 to 5
+		arr.insert(i)
+	next i
+	shuffleIntArray(arr)
+endfunction arr
+
 
 
 function PrintCellLoc(_cl as t_Cell_Location, _name$)
