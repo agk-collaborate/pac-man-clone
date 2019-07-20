@@ -25,6 +25,12 @@ EXAMPLE:
 #constant CELLTYPE_PATH	1
 
 
+type t_Cell_Location
+	ix as integer
+	iy as integer
+endtype
+
+
 type t_Cell
 	cellType as integer
 	pos as t_Vector_2
@@ -84,46 +90,30 @@ function Map_Generate(_seed, _w, _h, _gridSize#)
 		next i
 		
 		// Get random cell.
-		ix = Random(0, map.width - 1)
-		iy = Random(0, map.height - 1)
-		map.cells[iy,ix].cellType = CELLTYPE_PATH
+		curr as t_Cell_Location
+		prev as t_Cell_Location
+		curr.ix = Random(0, map.width - 1)
+		curr.iy = Random(0, map.height - 1)
+		map.cells[curr.iy,curr.ix].cellType = CELLTYPE_PATH
 		
 		bornTime# = Timer()
 		
 		do
 			if Timer() - bornTime# > 0.01
-				// Choose a random direction.
-				select Random(0,3)
-					case 0: // Up
-						dec iy
-						if iy < 0 then inc iy, 4
-					endcase
-					
-					case 1: // Down
-						inc iy
-						if iy > map.height - 1 then dec iy, 4
-					endcase
-					
-					case 2: // Left
-						dec ix
-						if ix < 0 then inc ix, 4
-					endcase
-					
-					case 3: // Right
-						inc ix
-						if ix > map.width - 1 then dec ix, 4
-					endcase
-				endselect
-				
-				map.cells[iy,ix].cellType = CELLTYPE_PATH
 				bornTime# = Timer()
+				
+				for i = 0 to 1
+					RandomCellMove(curr, prev)
+					
+					map.cells[curr.iy,curr.ix].cellType = CELLTYPE_PATH
+				next i
 			endif
 			
 			DrawAllCells()
 			
 			Print("Press LMB to stop.")
-			printC("ix: ") : print(ix)
-			printC("ix: ") : print(iy)
+			PrintCellLoc(curr, "curr")
+			PrintCellLoc(prev, "prev")
 			
 			sync()
 			
@@ -134,6 +124,37 @@ function Map_Generate(_seed, _w, _h, _gridSize#)
 endfunction
 
 
+
+// Choose a random direction.
+function RandomCellMove(_current ref as t_Cell_Location, _previous ref as t_Cell_Location)
+	_previous = _current
+	select Random(0,3)
+		case 0: // Up
+			dec _current.iy
+			if _current.iy < 0 then inc _current.iy, 4
+		endcase
+		
+		case 1: // Down
+			inc _current.iy
+			if _current.iy > map.height - 1 then dec _current.iy, 4
+		endcase
+		
+		case 2: // Left
+			dec _current.ix
+			if _current.ix < 0 then inc _current.ix, 4
+		endcase
+		
+		case 3: // Right
+			inc _current.ix
+			if _current.ix > map.width - 1 then dec _current.ix, 4
+		endcase
+	endselect
+endfunction
+
+
+function PrintCellLoc(_cl as t_Cell_Location, _name$)
+	printC(_name$) : printC(": [") : printC(_cl.ix) : PrintC(", ") : PrintC(_cl.ix) : Print("]")
+endfunction
 
 
 function Map_Delete()
@@ -164,6 +185,7 @@ function DrawAllCells()
 				select map.cells[i,j].cellType
 					case CELLTYPE_WALL:
 						DrawRange(map.cells[i,j].pos, map.cells[i,j].size, clr_blue, clr_blue, clr_blue, clr_blue, TRUE)
+						DrawRange(map.cells[i,j].pos, map.cells[i,j].size, clr_white, clr_white, clr_white, clr_white, FALSE)
 					endcase
 					case CELLTYPE_PATH:
 						DrawRange(map.cells[i,j].pos, map.cells[i,j].size, clr_red, clr_red, clr_red, clr_red, TRUE)
