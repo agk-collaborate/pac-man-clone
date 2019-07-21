@@ -8,13 +8,25 @@ DATE:
 	last updated 07/18/2019 by IronManhood
 	
 PURPOSE:
-	The map.
+	A procedurally generated maze map.
 
 DOCUMENTATION:
 	
 
 FUNCTIONS:
+	void <-- Map_Generate(_seed, _w, _h, _gridSize#)
 	
+	void <-- Map_Delete()
+	
+	void <-- MapCellRecursion(_h, _v)
+	
+	integer[] <-- generateRandomDirections()
+	
+	void <-- PrintCellLoc(_cl as t_Cell_Location, _name$)
+	
+	void <-- DrawAllCells()
+	
+	void <-- PrintAllCells()
 	
 EXAMPLE:
 
@@ -56,7 +68,15 @@ endtype
 
 
 global map as t_Map
+global seed as integer = 1
 
+
+function Map_Generate_Random(_scalar#)
+	_w = Random(16, 128)
+	_h = abs(_w * 0.5625)
+	_s# = resy(_scalar#) / _h
+	Map_Generate(seed, _w, _h, _s#)
+endfunction
 
 
 function Map_Generate(_seed, _w, _h, _gridSize#)
@@ -99,11 +119,37 @@ function Map_Generate(_seed, _w, _h, _gridSize#)
 		bornTime# = Timer()
 		
 		MapCellRecursion(curr.ix, curr.iy)
+		/*
+		// Remove extra wall layer.
+		map.cells.remove()
+		for i = 0 to map.cells.length - 1
+			map.cells[i].remove()
+		next i
+		*/
 	endif
 endfunction
 
 
-// Recursively step through the map.cells array to generate the maze.
+// Completely reset all map data.
+function Map_Delete()
+	for i = 0 to map.cells.length - 1
+		map.cells[i].length = 0
+	next i
+	map.cells.length = 0
+	
+	map.width = 0
+	map.height = 0
+	
+	map.gridSize = 0.0
+	
+	map.originPos = vec2(0.0, 0.0)
+	
+	map.created = FALSE
+endfunction
+
+
+
+// Recursively step through the map.cells array to generate a maze.
 function MapCellRecursion(_h, _v)
 	randos as integer[]
 	randos = generateRandomDirections()
@@ -112,36 +158,36 @@ function MapCellRecursion(_h, _v)
 		select randos[i]
 			case 1: // Up
 				if _v - 2 <= 0 then continue
-				if not map.cells[_v - 2,_h].cellType = 1
-					map.cells[_v - 2,_h].cellType = 1
-					map.cells[_v - 1,_h].cellType = 1
+				if map.cells[_v - 2,_h].cellType = CELLTYPE_WALL
+					map.cells[_v - 2,_h].cellType = CELLTYPE_PATH
+					map.cells[_v - 1,_h].cellType = CELLTYPE_PATH
 					MapCellRecursion(_h, _v - 2)
 				endif
 			endcase
 			
 			case 2: // Right
 				if _h + 2 >= map.width - 1 then continue
-				if not map.cells[_v,_h + 2].cellType = 1
-					map.cells[_v,_h + 2].cellType = 1
-					map.cells[_v,_h + 1].cellType = 1
+				if map.cells[_v,_h + 2].cellType = CELLTYPE_WALL
+					map.cells[_v,_h + 2].cellType = CELLTYPE_PATH
+					map.cells[_v,_h + 1].cellType = CELLTYPE_PATH
 					MapCellRecursion(_h + 2, _v)
 				endif
 			endcase
 			
 			case 3: // Down
 				if _v + 2 >= map.height - 1 then continue
-				if not map.cells[_v + 2,_h].cellType = 1
-					map.cells[_v + 2,_h].cellType = 1
-					map.cells[_v + 1,_h].cellType = 1
+				if map.cells[_v + 2,_h].cellType = CELLTYPE_WALL
+					map.cells[_v + 2,_h].cellType = CELLTYPE_PATH
+					map.cells[_v + 1,_h].cellType = CELLTYPE_PATH
 					MapCellRecursion(_h, _v + 2)
 				endif
 			endcase
 			
 			case 4: // Left
 				if _h - 2 <= 0 then continue
-				if not map.cells[_v, _h - 2].cellType = 1
-					map.cells[_v, _h - 2].cellType = 1
-					map.cells[_v, _h - 1].cellType = 1
+				if map.cells[_v, _h - 2].cellType = CELLTYPE_WALL
+					map.cells[_v, _h - 2].cellType = CELLTYPE_PATH
+					map.cells[_v, _h - 1].cellType = CELLTYPE_PATH
 					MapCellRecursion(_h - 2, _v)
 				endif
 			endcase
@@ -161,32 +207,16 @@ endfunction arr
 
 
 
+// Prints the cell indices.
 function PrintCellLoc(_cl as t_Cell_Location, _name$)
 	printC(_name$) : printC(": [") : printC(_cl.ix) : PrintC(", ") : PrintC(_cl.ix) : Print("]")
 endfunction
 
 
-function Map_Delete()
-	for i = 0 to map.cells.length - 1
-		map.cells[i].length = 0
-	next i
-	map.cells.length = 0
-	
-	map.width = 0
-	map.height = 0
-	
-	map.gridSize = 0.0
-	
-	map.originPos = vec2(0.0, 0.0)
-	
-	map.created = FALSE
-endfunction
 
 
-
-
-
-
+// A temporary function for representing cells.
+// Simply draws a box for each cell.
 function DrawAllCells()
 	if map.created
 		for i = 0 to map.cells.length - 1
@@ -206,9 +236,7 @@ function DrawAllCells()
 endfunction
 
 
-
-
-
+// Prints the cells in map formation.
 function PrintAllCells()
 	if map.created
 		for i = 0 to map.cells.length - 1

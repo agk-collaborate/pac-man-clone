@@ -45,7 +45,7 @@ function Print_Debug(state)
 		
 		PrintC("Vitrual Resolution: ") : Print(vec2_str(res, 0))
 		
-		PrintAllCells()
+//~		PrintAllCells()
 	endif
 endfunction
 

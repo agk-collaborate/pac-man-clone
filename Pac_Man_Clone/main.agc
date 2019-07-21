@@ -77,7 +77,27 @@ function UpdateApp(state)
 			endif
 		endcase
 		case APPSTATE_GAME:
+			Print("Press left/right arrow keys to change the seed and generate a new maze.")
+			Print("Press up arrow key to randomly generate a new maze from the current seed.")
+			PrintC("seed: ") : Print(seed)
+			if GetRawKeyPressed(37) // Left Arrow
+				dec seed
+				if seed < 1 then seed = 1
+				Map_Delete()
+				Map_Generate(seed, 40, 32, resx(0.0125))
+				
+			elseif GetRawKeyPressed(39) // Right Arrow
+				inc seed
+				Map_Delete()
+				Map_Generate(seed, 40, 32, resx(0.0125))
+				
+			elseif GetRawKeyPressed(38) // Up Arrow
+				Map_Delete()
+				Map_Generate_Random(0.6)
+			endif
+			
 			DrawAllCells()
+			
 			if GetRawKeyPressed(27) // Escape
 				Map_Delete()
 				MainMenu_Show()

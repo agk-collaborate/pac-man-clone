@@ -54,10 +54,10 @@ FILE_5=source%2Fpac%2Dman.agc;-1
 FILE_6=source%2Fvector2.agc;-1
 [files]
 FILE_NAME_0=0;source%2Fghosts.agc;96;0
-FILE_NAME_1=0;main.agc;0;1
-FILE_NAME_2=0;source%2FmainMenu.agc;98;2
-FILE_NAME_3=1;source%2Fmap.agc;115;3
-FILE_NAME_4=0;source%2Fmisc.agc;35;4
+FILE_NAME_1=0;main.agc;54;1
+FILE_NAME_2=0;source%2FmainMenu.agc;99;2
+FILE_NAME_3=1;source%2Fmap.agc;156;3
+FILE_NAME_4=0;source%2Fmisc.agc;7;4
 FILE_NAME_5=0;source%2Fpac%2Dman.agc;0;5
 FILE_NAME_6=0;source%2Fvector2.agc;17;6
 [watchvariables]
