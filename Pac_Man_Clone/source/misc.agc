@@ -18,6 +18,12 @@ DOCUMENTATION:
 	
 	void <-- shuffleIntArray(_irr ref as integer[])
 
+	boolean <-- inrange_i(_val, _min, _max)
+	boolean <-- inrange_f(_val#, _min#, _max#)
+		
+	float <-- clamp_i(_val, _min, _max)
+	float <-- clamp_f(_val#, _min#, _max#)
+	
 FUNCTIONS:
 	
 	
@@ -85,3 +91,41 @@ function shuffleIntArray(_irr ref as integer[])
 		_irr.swap(_i1, _i2)
 	next i
 endfunction
+
+
+
+// Returns TRUE if the value is within min/max. integer
+function inrange_i(_val, _min, _max)
+	if _val < _min then exitfunction FALSE
+	if _val > _max then exitfunction FALSE
+endfunction TRUE
+
+// Returns TRUE if the value is within min/max. float
+function inrange_f(_val#, _min#, _max#)
+	if _val# < _min# then exitfunction FALSE
+	if _val# > _max# then exitfunction FALSE
+endfunction TRUE
+
+
+
+// Clamp a value between min/max. integer
+function clamp_i(_val, _min, _max)
+	if _val < _min then exitfunction _min
+	if _val > _max then exitfunction _max
+endfunction _val
+
+// Clamp a value between min/max. integer
+function clamp_f(_val#, _min#, _max#)
+	if _val# < _min# then exitfunction _min#
+	if _val# > _max# then exitfunction _max#
+endfunction _val#
+
+
+
+
+
+
+
+
+
+

@@ -8,6 +8,7 @@
 #include "source/map.agc"
 #include "source/ghosts.agc"
 #include "source/pac-man.agc"
+#include "source/keys.agc"
 
 #constant APPSTATE_MAINMENU	0
 #constant APPSTATE_GAME		1
@@ -44,14 +45,24 @@ SetPrintSize(PrintSize)
 global clr_white as integer
 global clr_red as integer
 global clr_blue as integer
+global clr_lightblue as integer
+global clr_lightgrey as integer
+global clr_darkgrey as integer
+global clr_violet as integer
 clr_white = MakeColor(255, 255, 255)
 clr_red = MakeColor(255, 0, 0)
 clr_blue = MakeColor(0, 0, 255)
+clr_lightblue = MakeColor(12, 160, 225)
+clr_lightgrey = MakeColor(161, 161, 161)
+clr_darkgrey = MakeColor(31, 31, 31)
+clr_violet = MakeColor(225, 190, 225)
 
 
 
 MainMenu_Create()
 
+global sparsity as float = 0.02
+global mazetype as integer = 1
 
 do	
 	UpdateApp(AppState)
@@ -79,22 +90,72 @@ function UpdateApp(state)
 		case APPSTATE_GAME:
 			Print("Press left/right arrow keys to change the seed and generate a new maze.")
 			Print("Press up arrow key to randomly generate a new maze from the current seed.")
+			Print("Press down arrow key to generate a symmetrical map.")
+			Print("Hold equal/hyphen keys to inc/dec sparsity variable.")
 			PrintC("seed: ") : Print(seed)
-			if GetRawKeyPressed(37) // Left Arrow
+			PrintC("sparsity: ") : Print(sparsity)
+			
+			if KEY_EQUAL_STATE
+				inc sparsity, 0.1 * GetFrameTime()
+				sparsity = clamp_f(sparsity, 0.0, 1.0)
+				
+				if mazetype = 1
+					Map_Delete()
+					Map_Generate(seed, 40, 32, resx(0.0125), FALSE, sparsity)
+				elseif mazetype = 2
+					_w = map.width
+					_h = map.height
+					_gs# = map.gridSize
+					Map_Delete()
+					Map_Generate(seed, _w, _h, _gs#, FALSE, sparsity)
+				elseif mazetype = 3
+					Map_Delete()
+					Map_Generate(seed, 40, 32, resx(0.0125), TRUE, sparsity)
+				endif
+				
+			elseif KEY_HYPHEN_STATE
+				dec sparsity, 0.1 * GetFrameTime()
+				sparsity = clamp_f(sparsity, 0.0, 1.0)
+				
+				if mazetype = 1
+					Map_Delete()
+					Map_Generate(seed, 40, 32, resx(0.0125), FALSE, sparsity)
+				elseif mazetype = 2
+					_w = map.width
+					_h = map.height
+					_gs# = map.gridSize
+					Map_Delete()
+					Map_Generate(seed, _w, _h, _gs#, FALSE, sparsity)
+				elseif mazetype = 3
+					Map_Delete()
+					Map_Generate(seed, 40, 32, resx(0.0125), TRUE, sparsity)
+				endif
+			endif
+			
+			if KEY_LEFT_PRESSED
 				dec seed
 				if seed < 1 then seed = 1
 				Map_Delete()
-				Map_Generate(seed, 40, 32, resx(0.0125))
+				Map_Generate(seed, 40, 32, resx(0.0125), FALSE, sparsity)
+				mazetype = 1
 				
-			elseif GetRawKeyPressed(39) // Right Arrow
+			elseif KEY_RIGHT_PRESSED
 				inc seed
 				Map_Delete()
-				Map_Generate(seed, 40, 32, resx(0.0125))
+				Map_Generate(seed, 40, 32, resx(0.0125), FALSE, sparsity)
+				mazetype = 1
 				
-			elseif GetRawKeyPressed(38) // Up Arrow
+			elseif KEY_UP_PRESSED
 				Map_Delete()
-				Map_Generate_Random(0.6)
+				Map_Generate_Random(0.6, sparsity)
+				mazetype = 2
+				
+			elseif KEY_DOWN_PRESSED
+				Map_Delete()
+				Map_Generate(seed, 40, 32, resx(0.0125), TRUE, sparsity)
+				mazetype = 3
 			endif
+			
 			
 			DrawAllCells()
 			

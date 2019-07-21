@@ -110,7 +110,7 @@ function MainMenu_Update()
 				SetSpriteColor(mainmenu.play_sprID, 0, 255, 0, 255)
 				if GetPointerPressed()
 					MainMenu_Hide()
-					Map_Generate(seed, 40, 32, resx(0.0125))
+					Map_Generate(seed, 40, 32, resx(0.0125), FALSE, sparsity)
 					AppState = APPSTATE_GAME
 				endif
 			else
