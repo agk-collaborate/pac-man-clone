@@ -9,6 +9,7 @@
 #include "source/ghosts.agc"
 #include "source/pac-man.agc"
 #include "source/keys.agc"
+#include "source/temp_Map.agc"
 
 #constant APPSTATE_MAINMENU	0
 #constant APPSTATE_GAME		1
@@ -91,6 +92,7 @@ function UpdateApp(state)
 			Print("Press left/right arrow keys to change the seed and generate a new maze.")
 			Print("Press up arrow key to randomly generate a new maze from the current seed.")
 			Print("Press down arrow key to generate a symmetrical map.")
+			Print("Press B key to generate a Pac-Man's original map.")
 			Print("Hold equal/hyphen keys to inc/dec sparsity variable.")
 			PrintC("seed: ") : Print(seed)
 			PrintC("sparsity: ") : Print(sparsity)
@@ -154,6 +156,10 @@ function UpdateApp(state)
 				Map_Delete()
 				Map_Generate(seed, 40, 32, resx(0.0125), TRUE, sparsity)
 				mazetype = 3
+			
+			elseif KEY_B_PRESSED
+				Map_Delete()
+				Original_Map_Generate(19, 22)
 			endif
 			
 			
