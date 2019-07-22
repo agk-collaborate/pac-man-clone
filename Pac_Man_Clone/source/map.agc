@@ -372,15 +372,7 @@ function Original_Map_Generate(_width as integer, _height as integer)
 	Map_Delete()
 	if map.created = FALSE
 		map.created = TRUE
-		
-		for i = 0 to map.cells.length - 1
-			for j = 0 to map.cells[i].length - 1
-				map.cells[i,j].cellType = CELLTYPE_WALL
-				map.cells[i,j].size = vec2(map.gridSize, map.gridSize)
-				map.cells[i,j].pos.x = (j * map.cells[i,j].size.x) + map.originPos.x
-				map.cells[i,j].pos.y = (i * map.cells[i,j].size.y) + map.originPos.y
-			next j
-		next i
+		//Stuff added soon (probably (maybe))
 		
 	endif
 endfunction
