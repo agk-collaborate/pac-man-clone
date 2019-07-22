@@ -61,7 +61,7 @@ clr_violet = MakeColor(225, 190, 225)
 
 MainMenu_Create()
 
-global sparsity as float = 0.02
+global sparsity as float = 0.2
 global mazetype as integer = 1
 
 do	

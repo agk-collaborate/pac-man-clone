@@ -31,9 +31,10 @@ EXAMPLE:
 */
 
 
-#constant CELLTYPE_WALL	0 // For blocking movement.
-#constant CELLTYPE_PATH	1 // For movement.
-#constant CELLTYPE_SPAWN	2 // For ghost block.
+#constant CELLTYPE_WALL		0 // For blocking movement.
+#constant CELLTYPE_PATH		1 // For movement.
+#constant CELLTYPE_SPAWN		2 // For ghost block path.
+#constant CELLTYPE_WHITEWALL	3 // For ghost block wall.
 
 
 
@@ -113,6 +114,8 @@ function Map_Generate(_seed, _w, _h, _gridSize#, _symmetrical, _sparsity#)
 		// Generate rough maze.
 		MapCellRecursion(Random(0, map.width - 1), Random(0, map.height - 1), CELLTYPE_PATH)
 		
+		RemoveDeadEnds(_qw, _qh)
+		
 		
 		// Cut walls. Start at 1 to avoid the border walls.
 		for i = 1 to map.cells.length - 2
@@ -120,6 +123,8 @@ function Map_Generate(_seed, _w, _h, _gridSize#, _symmetrical, _sparsity#)
 				if inrange_i(Random(0, 100), abs(50.0 - (50.0 * map.sparsity)), abs(50.0 + (50.0 * map.sparsity)))
 					if map.cells[i,j].cellType = CELLTYPE_WALL
 						map.cells[i,j].cellType = CELLTYPE_PATH
+						DrawAllCells()
+						sync()
 					endif
 				endif
 			next j
@@ -130,7 +135,11 @@ function Map_Generate(_seed, _w, _h, _gridSize#, _symmetrical, _sparsity#)
 		// Check for cavities.
 		for i = 0 to map.cells.length - 1
 			for j = 0 to map.cells[i].length - 1
-				if IsIsland(i, j) then map.cells[i,j].cellType = CELLTYPE_WALL
+				if IsIsland(i, j)
+					map.cells[i,j].cellType = CELLTYPE_WALL
+					DrawAllCells()
+					sync()
+				endif
 			next j
 		next i
 		
@@ -145,6 +154,8 @@ function Map_Generate(_seed, _w, _h, _gridSize#, _symmetrical, _sparsity#)
 					_l = (map.cells[i].length - 1) - j
 					map.cells[i,j].cellType = map.cells[i,_l].cellType
 				next j
+				DrawAllCells()
+				sync()
 			next i
 			
 			// Copy top half to bottom half.
@@ -153,6 +164,8 @@ function Map_Generate(_seed, _w, _h, _gridSize#, _symmetrical, _sparsity#)
 				for j = 0 to map.cells[i].length - 1
 					map.cells[i,j].cellType = map.cells[_l,j].cellType
 				next j
+				DrawAllCells()
+				sync()
 			next i
 		endif
 		
@@ -170,13 +183,13 @@ function Map_Generate(_seed, _w, _h, _gridSize#, _symmetrical, _sparsity#)
 		for i = _tl to _tr
 			for j = _bl to _br
 				if i = _tl and j = _qw
-					map.cells[i,j].cellType = CELLTYPE_PATH
-					
-				elseif i = _tl or i = _tr or j = _bl or j = _br
 					map.cells[i,j].cellType = CELLTYPE_SPAWN
 					
+				elseif i = _tl or i = _tr or j = _bl or j = _br
+					map.cells[i,j].cellType = CELLTYPE_WHITEWALL
+					
 				else
-					map.cells[i,j].cellType = CELLTYPE_PATH
+					map.cells[i,j].cellType = CELLTYPE_SPAWN
 				endif
 			next j
 		next i
@@ -190,8 +203,8 @@ function IsIsland(_i, _j)
 	if _i - 1 < 0 then exitfunction FALSE
 	if _j - 1 < 0 then exitfunction FALSE
 	
-	if _i + 1 > map.width then exitfunction FALSE
-	if _j + 1 > map.height then exitfunction FALSE
+	if _i + 1 > map.height then exitfunction FALSE
+	if _j + 1 > map.width then exitfunction FALSE
 	
 	if map.cells[_i,_j].cellType = CELLTYPE_WALL then exitfunction FALSE // Current
 	if map.cells[_i - 1,_j - 1].cellType = CELLTYPE_WALL then exitfunction FALSE // Top Left
@@ -232,10 +245,13 @@ function MapCellRecursion(_h, _v, _cellType)
 	for i = 0 to randos.length - 1
 		select randos[i]
 			case 1: // Up
-				if _v - 2 <= 0 then continue
+				if _v - 2 < 0 then continue
 				if not map.cells[_v - 2,_h].cellType = _cellType
 					map.cells[_v - 2,_h].cellType = _cellType
 					map.cells[_v - 1,_h].cellType = _cellType
+					DrawAllCells()
+					sync()
+//~					sleep(20)
 					MapCellRecursion(_h, _v - 2, _cellType)
 				endif
 			endcase
@@ -245,6 +261,9 @@ function MapCellRecursion(_h, _v, _cellType)
 				if not map.cells[_v,_h + 2].cellType = _cellType
 					map.cells[_v,_h + 2].cellType = _cellType
 					map.cells[_v,_h + 1].cellType = _cellType
+					DrawAllCells()
+					sync()
+//~					sleep(20)
 					MapCellRecursion(_h + 2, _v, _cellType)
 				endif
 			endcase
@@ -254,6 +273,9 @@ function MapCellRecursion(_h, _v, _cellType)
 				if not map.cells[_v + 2,_h].cellType = _cellType
 					map.cells[_v + 2,_h].cellType = _cellType
 					map.cells[_v + 1,_h].cellType = _cellType
+					DrawAllCells()
+					sync()
+//~					sleep(20)
 					MapCellRecursion(_h, _v + 2, _cellType)
 				endif
 			endcase
@@ -263,6 +285,9 @@ function MapCellRecursion(_h, _v, _cellType)
 				if not map.cells[_v, _h - 2].cellType = _cellType
 					map.cells[_v, _h - 2].cellType = _cellType
 					map.cells[_v, _h - 1].cellType = _cellType
+					DrawAllCells()
+					sync()
+//~					sleep(20)
 					MapCellRecursion(_h - 2, _v, _cellType)
 				endif
 			endcase
@@ -271,14 +296,30 @@ function MapCellRecursion(_h, _v, _cellType)
 endfunction
 
 
+function RemoveDeadEnds(_h, _v)
+		for i = 0 to map.cells.length - 1
+			for j = 0 to map.cells[i].length - 1
+
+			next j
+		next i
+endfunction
+
+
+
+function getAdjacentPaths(_h, _v)
+	_arr as integer[0,0]
+	
+endfunction
+
+
 // Returns a shuffled integer array.
 function generateRandomDirections()
-	arr as integer[]
+	_arr as integer[]
 	for i = 1 to 5
-		arr.insert(i)
+		_arr.insert(i)
 	next i
-	shuffleIntArray(arr)
-endfunction arr
+	shuffleIntArray(_arr)
+endfunction _arr
 
 
 
@@ -298,6 +339,9 @@ function DrawAllCells()
 						DrawRange(map.cells[i,j].pos, map.cells[i,j].size, clr_darkgrey, clr_darkgrey, clr_darkgrey, clr_darkgrey, TRUE)
 					endcase
 					case CELLTYPE_SPAWN:
+						DrawRange(map.cells[i,j].pos, map.cells[i,j].size, clr_white, clr_white, clr_white, clr_white, TRUE)
+					endcase
+					case CELLTYPE_WHITEWALL:
 						DrawRange(map.cells[i,j].pos, map.cells[i,j].size, clr_lightgrey, clr_lightgrey, clr_lightgrey, clr_lightgrey, TRUE)
 					endcase
 				endselect
