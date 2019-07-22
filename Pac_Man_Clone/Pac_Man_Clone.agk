@@ -54,10 +54,12 @@ FILE_4=source%2Fmap.agc;-1
 FILE_5=source%2Fmisc.agc;-1
 FILE_6=source%2Fpac-man.agc;-1
 FILE_7=source%2Fvector2.agc;-1
+FILE_8=source%2Ftemp_Map.agc;-1
 
 [files]
-FILE_NAME_0=1;main.agc;258;0
-FILE_NAME_1=0;source%2Fmap.agc;9070;1
+FILE_NAME_0=0;main.agc;258;0
+FILE_NAME_1=0;source%2Fmap.agc;9120;1
+FILE_NAME_2=1;source%2Ftemp_Map.agc;0;2
 
 [watchvariables]
 

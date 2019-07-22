@@ -372,7 +372,26 @@ function Original_Map_Generate(_width as integer, _height as integer)
 	Map_Delete()
 	if map.created = FALSE
 		map.created = TRUE
+		mapp as integer[19,22]
+		loadMap()
 		//Stuff added soon (probably (maybe))
-		
+		for s = 0 to 18
+			for t = 0 to 21
+				temp = mapp[s,t]
+				if temp = 0
+					map.cells[s,t].cellType = CELLTYPE_WALL
+				elseif temp = 1
+					map.cells[s,t].cellType = CELLTYPE_PATH
+				elseif temp = 2
+					map.cells[s,t].cellType = CELLTYPE_WALL
+				elseif temp = 3
+					map.cells[s,t].cellType = CELLTYPE_SPAWN
+				elseif temp = 4
+					map.cells[s,t].cellType = CELLTYPE_PATH
+				elseif temp = 5
+					map.cells[s,t].cellType = CELLTYPE_WHITEWALL
+				endif
+			next t
+		next s
 	endif
 endfunction

@@ -9,6 +9,7 @@
 #include "source/ghosts.agc"
 #include "source/pac-man.agc"
 #include "source/keys.agc"
+#include "source/temp_Map.agc"
 
 #constant APPSTATE_MAINMENU	0
 #constant APPSTATE_GAME		1
@@ -63,6 +64,7 @@ MainMenu_Create()
 
 global sparsity as float = 0.2
 global mazetype as integer = 1
+
 
 do	
 	UpdateApp(AppState)
