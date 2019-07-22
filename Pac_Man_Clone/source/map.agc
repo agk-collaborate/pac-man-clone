@@ -191,6 +191,8 @@ function Map_Generate(_seed, _w, _h, _gridSize#, _symmetrical, _sparsity#)
 				else
 					map.cells[i,j].cellType = CELLTYPE_SPAWN
 				endif
+				DrawAllCells()
+				sync()
 			next j
 		next i
 	endif

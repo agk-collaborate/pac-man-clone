@@ -58,10 +58,10 @@ FILE_NAME_0=0;source%2Fghosts.agc;41;0
 FILE_NAME_1=0;source%2Fkeys.agc;0;1
 FILE_NAME_2=0;main.agc;57;2
 FILE_NAME_3=0;source%2FmainMenu.agc;112;3
-FILE_NAME_4=1;source%2Fmap.agc;126;4
+FILE_NAME_4=1;source%2Fmap.agc;184;4
 FILE_NAME_5=0;source%2Fmisc.agc;24;5
 FILE_NAME_6=0;source%2Fpac%2Dman.agc;0;6
-FILE_NAME_7=0;source%2Fvector2.agc;18;7
+FILE_NAME_7=0;source%2Fvector2.agc;24;7
 [watchvariables]
 [project]
 description=
