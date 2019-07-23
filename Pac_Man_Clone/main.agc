@@ -93,7 +93,7 @@ function UpdateApp(state)
 			Print("Press left/right arrow keys to change the seed and generate a new maze.")
 			Print("Press up arrow key to randomly generate a new maze from the current seed.")
 			Print("Press down arrow key to generate a symmetrical map.")
-			Print("Press B key to generate a Pac-Man's original map.")
+			Print("Press B key to create a defined Pac-Man map.")
 			Print("Hold equal/hyphen keys to inc/dec sparsity variable.")
 			PrintC("seed: ") : Print(seed)
 			PrintC("sparsity: ") : Print(sparsity)
@@ -160,7 +160,7 @@ function UpdateApp(state)
 			
 			elseif KEY_B_PRESSED
 				Map_Delete()
-				Original_Map_Generate(19, 22)
+				defineMap()
 			endif
 			
 			

@@ -367,31 +367,37 @@ function PrintAllCells()
 endfunction
 
 
-//Generates the original Pac-Man map
-function Original_Map_Generate(_width as integer, _height as integer)
-	Map_Delete()
-	if map.created = FALSE
-		map.created = TRUE
-		mapp as integer[19,22]
-		loadMap()
-		//Stuff added soon (probably (maybe))
-		for s = 0 to 18
-			for t = 0 to 21
-				temp = mapp[s,t]
-				if temp = 0
-					map.cells[s,t].cellType = CELLTYPE_WALL
-				elseif temp = 1
-					map.cells[s,t].cellType = CELLTYPE_PATH
-				elseif temp = 2
-					map.cells[s,t].cellType = CELLTYPE_WALL
-				elseif temp = 3
-					map.cells[s,t].cellType = CELLTYPE_SPAWN
-				elseif temp = 4
-					map.cells[s,t].cellType = CELLTYPE_PATH
-				elseif temp = 5
-					map.cells[s,t].cellType = CELLTYPE_WHITEWALL
-				endif
-			next t
-		next s
-	endif
+//Generates a defined Pac-Man map
+function defineMap()
+	temp as integer
+    // From forum thread: https://forum.thegamecreators.com/thread/212096
+    
+    mazeFile = openToRead("map.csv")
+    // Set first index of array to zero, this is available to use, but is not being used.
+    y = 0
+    repeat
+		line$ = readline(mazeFile) // Read a line from file
+		numParts = countStringTokens(line$ , ";" ) // Count number of csv parameters in line
+		if numParts > 0 // If more than none - ie not a blank line
+			inc y // Increase y index
+			for x = 1 to numParts // Loop through parameters on this line, using x array index
+			temp = val(getstringToken(line$ , ";" , x)) // find type
+			if temp = 0
+				map.cells[x,y].cellType = CELLTYPE_WALL
+			elseif temp = 1
+				map.cells[x,y].cellType = CELLTYPE_PATH
+			elseif temp = 2
+				map.cells[x,y].cellType = CELLTYPE_WALL
+			elseif temp = 3
+				map.cells[x,y].cellType = CELLTYPE_SPAWN
+			elseif temp = 4
+				map.cells[x,y].cellType = CELLTYPE_PATH
+			elseif temp = 5
+				map.cells[x,y].cellType = CELLTYPE_WHITEWALL
+			endif
+			map.cells[x , y].cellType = val(getstringToken(line$ , ";" , x)) // populate array
+			next x
+		endif
+    until fileeof(mazeFile) > 0 // Until the end of the file
+    closefile(mazeFile) // y will now contain the number of lines read.
 endfunction
