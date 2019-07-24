@@ -9,7 +9,6 @@
 #include "source/ghosts.agc"
 #include "source/pac-man.agc"
 #include "source/keys.agc"
-#include "source/temp_Map.agc"
 
 #constant APPSTATE_MAINMENU	0
 #constant APPSTATE_GAME		1
@@ -62,8 +61,7 @@ clr_violet = MakeColor(225, 190, 225)
 
 MainMenu_Create()
 
-global sparsity as float = 0.2
-global mazetype as integer = 1
+
 
 
 do	
@@ -90,81 +88,6 @@ function UpdateApp(state)
 			endif
 		endcase
 		case APPSTATE_GAME:
-			Print("Press left/right arrow keys to change the seed and generate a new maze.")
-			Print("Press up arrow key to randomly generate a new maze from the current seed.")
-			Print("Press down arrow key to generate a symmetrical map.")
-			Print("Press B key to create a defined Pac-Man map.")
-			Print("Hold equal/hyphen keys to inc/dec sparsity variable.")
-			PrintC("seed: ") : Print(seed)
-			PrintC("sparsity: ") : Print(sparsity)
-			
-			if KEY_EQUAL_STATE
-				inc sparsity, 0.1 * GetFrameTime()
-				sparsity = clamp_f(sparsity, 0.0, 1.0)
-				
-				if mazetype = 1
-					Map_Delete()
-					Map_Generate(seed, 40, 32, resx(0.0125), FALSE, sparsity)
-				elseif mazetype = 2
-					_w = map.width
-					_h = map.height
-					_gs# = map.gridSize
-					Map_Delete()
-					Map_Generate(seed, _w, _h, _gs#, FALSE, sparsity)
-				elseif mazetype = 3
-					Map_Delete()
-					Map_Generate(seed, 40, 32, resx(0.0125), TRUE, sparsity)
-				endif
-				
-			elseif KEY_HYPHEN_STATE
-				dec sparsity, 0.1 * GetFrameTime()
-				sparsity = clamp_f(sparsity, 0.0, 1.0)
-				
-				if mazetype = 1
-					Map_Delete()
-					Map_Generate(seed, 40, 32, resx(0.0125), FALSE, sparsity)
-				elseif mazetype = 2
-					_w = map.width
-					_h = map.height
-					_gs# = map.gridSize
-					Map_Delete()
-					Map_Generate(seed, _w, _h, _gs#, FALSE, sparsity)
-				elseif mazetype = 3
-					Map_Delete()
-					Map_Generate(seed, 40, 32, resx(0.0125), TRUE, sparsity)
-				endif
-			endif
-			
-			if KEY_LEFT_PRESSED
-				dec seed
-				if seed < 1 then seed = 1
-				Map_Delete()
-				Map_Generate(seed, 40, 32, resx(0.0125), FALSE, sparsity)
-				mazetype = 1
-				
-			elseif KEY_RIGHT_PRESSED
-				inc seed
-				Map_Delete()
-				Map_Generate(seed, 40, 32, resx(0.0125), FALSE, sparsity)
-				mazetype = 1
-				
-			elseif KEY_UP_PRESSED
-				Map_Delete()
-				Map_Generate_Random(0.6, sparsity)
-				mazetype = 2
-				
-			elseif KEY_DOWN_PRESSED
-				Map_Delete()
-				Map_Generate(seed, 40, 32, resx(0.0125), TRUE, sparsity)
-				mazetype = 3
-			
-			elseif KEY_B_PRESSED
-				Map_Delete()
-				defineMap()
-			endif
-			
-			
-			DrawAllCells()
 			
 			if GetRawKeyPressed(27) // Escape
 				Map_Delete()
