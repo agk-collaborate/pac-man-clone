@@ -110,8 +110,8 @@ function MainMenu_Update()
 				SetSpriteColor(mainmenu.play_sprID, 0, 255, 0, 255)
 				if GetPointerPressed()
 					MainMenu_Hide()
-//~					LoadMap("map.csv")
-					LoadMap("map.json")
+					LoadMap("map.csv")
+//~					LoadMap("map.json")
 //~					map.tiles.save("csv_to.json")
 					AppState = APPSTATE_GAME
 				endif

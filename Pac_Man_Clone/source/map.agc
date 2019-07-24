@@ -19,11 +19,11 @@ EXAMPLE:
 	
 */
 
-
-#constant TILETYPE_WALL		0 // For blocking movement.
-#constant TILETYPE_PATH		1 // For movement.
-#constant TILETYPE_SPAWN		2 // For ghost block path.
-#constant TILETYPE_WHITEWALL	3 // For ghost block wall.
+#constant TILETYPE_NULL		0
+#constant TILETYPE_WALL		1 // For blocking movement.
+#constant TILETYPE_PATH		2 // For movement.
+#constant TILETYPE_SPAWN		3 // For ghost block path.
+#constant TILETYPE_WHITEWALL	4 // For ghost block wall.
 
 
 type t_Cell
@@ -37,7 +37,6 @@ type t_Tile
 	tileType as integer
 	pos as t_Vector_2
 	size as t_Vector_2
-	center as t_Vector_2
 endtype
 
 
@@ -45,6 +44,13 @@ endtype
 
 type t_Map
 	tiles as t_Tile[-1,-1]
+	
+	originPos as t_Vector_2
+	
+	gridSize as float
+	
+	width as integer
+	height as integer
 	
 	created as integer
 endtype
@@ -61,13 +67,19 @@ function Map_Delete()
 	next i
 	map.tiles.length = 0
 	
+	map.width = 0
+	map.height = 0
+	
+	map.gridSize = 0.0
+	
+	map.originPos = vec2(0.0, 0.0)
 	map.created = FALSE
 endfunction
 
 
 // Loads a map from file.
 function LoadMap(_mapFile$)
-	if GetFileExists(_mapFile$) = 0 then exitfunction
+	if GetFileExists(_mapFile$) = 0 or map.created = TRUE then exitfunction
 	
 	_fileType$ = GetStringToken2(_mapFile$, ".", CountStringTokens2(_mapFile$, "."))
 //~	if CompareString(_fileType$, "csv")
@@ -81,11 +93,28 @@ function LoadMap(_mapFile$)
 				map.tiles.length = map.tiles.length + 1
 				map.tiles[map.tiles.length].length = CountStringTokens2(_line$, ";")
 				for i = 0 to map.tiles[map.tiles.length].length - 1
-					map.tiles[map.tiles.length,i].tileType = val(GetStringToken(_line$, ";", i + 1))
+					map.tiles[map.tiles.length,i].tileType = val(GetStringToken2(_line$, ";", i + 1))
 				next i
 			endwhile
 			CloseFile(f)
+			
 			map.created = TRUE
+			
+			map.height = map.tiles.length
+			map.width = map.tiles[0].length
+			
+			map.gridSize = resy(0.8) / map.width
+			
+			map.originPos.x = resx(0.5) - ((map.gridSize * map.width) * 0.5)
+			map.originPos.y = resy(0.5) - ((map.gridSize * map.height) * 0.5)
+			
+			for i = 0 to map.tiles.length - 1
+				for j = 0 to map.tiles[i].length - 1
+					map.tiles[i,j].size = vec2(map.gridSize, map.gridSize)
+					map.tiles[i,j].pos.x = (j * map.tiles[i,j].size.x) + map.originPos.x
+					map.tiles[i,j].pos.y = (i * map.tiles[i,j].size.y) + map.originPos.y
+				next j
+			next i
 		endcase
 		
 		case "json":
