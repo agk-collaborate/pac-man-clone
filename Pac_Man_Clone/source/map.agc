@@ -19,11 +19,13 @@ EXAMPLE:
 	
 */
 
-#constant TILETYPE_NULL		0
+#constant TILETYPE_NULL		0 // No tile. Just black.
 #constant TILETYPE_WALL		1 // For blocking movement.
 #constant TILETYPE_PATH		2 // For movement.
-#constant TILETYPE_SPAWN		3 // For ghost block path.
+#constant TILETYPE_SPAWN		3 // For ghost block path. This allows ghost to move freely but not the player.
 #constant TILETYPE_WHITEWALL	4 // For ghost block wall.
+#constant TILETYPE_EXITPATH	5 // For exit path.
+#constant TILETYPE_NODOTPATH	6 // For paths with no dots.
 
 
 type t_Cell
@@ -31,28 +33,40 @@ type t_Cell
 endtype
 
 
+type t_Dot
+	created as integer
+	active as integer
+	
+	size as float
+	
+	pos as t_Vector_2
+endtype
+
 
 
 type t_Tile
 	tileType as integer
+	
 	pos as t_Vector_2
 	size as t_Vector_2
+	
+	dot as t_Dot
 endtype
 
 
 
 
 type t_Map
-	tiles as t_Tile[-1,-1]
-	
-	originPos as t_Vector_2
-	
-	gridSize as float
+	created as integer
 	
 	width as integer
 	height as integer
 	
-	created as integer
+	gridSize as float
+	
+	originPos as t_Vector_2
+	
+	tiles as t_Tile[-1,-1]
 endtype
 
 
@@ -63,9 +77,9 @@ global map as t_Map
 
 function Map_Delete()
 	for i = 0 to map.tiles.length - 1
-		map.tiles[i].length = 0
+		map.tiles[i].length = -1
 	next i
-	map.tiles.length = 0
+	map.tiles.length = -1
 	
 	map.width = 0
 	map.height = 0
@@ -82,9 +96,7 @@ function LoadMap(_mapFile$)
 	if GetFileExists(_mapFile$) = 0 or map.created = TRUE then exitfunction
 	
 	_fileType$ = GetStringToken2(_mapFile$, ".", CountStringTokens2(_mapFile$, "."))
-//~	if CompareString(_fileType$, "csv")
-//~	elseif CompareString(_fileType$, "json")
-//~	endif
+	
 	select _fileType$
 		case "csv":
 			f = OpenToRead(_mapFile$)
@@ -113,12 +125,24 @@ function LoadMap(_mapFile$)
 					map.tiles[i,j].size = vec2(map.gridSize, map.gridSize)
 					map.tiles[i,j].pos.x = (j * map.tiles[i,j].size.x) + map.originPos.x
 					map.tiles[i,j].pos.y = (i * map.tiles[i,j].size.y) + map.originPos.y
+					if map.tiles[i,j].tileType = TILETYPE_PATH
+						map.tiles[i,j].dot.created = TRUE
+						map.tiles[i,j].dot.active = TRUE
+						map.tiles[i,j].dot.size = map.gridSize * 0.125
+						map.tiles[i,j].dot.pos = vec2_Add(map.tiles[i,j].pos, vec2_DivNum1(map.tiles[i,j].size, 2.0))
+					endif
 				next j
 			next i
 		endcase
 		
 		case "json":
-			map.tiles.load(_mapFile$)
+			_temp$ = ""
+			f = OpenToRead("map.json")
+			while FileEOF(f) = FALSE
+				_temp$ = _temp$ + ReadLine(f)
+			endwhile
+			CloseFile(f)
+			map.fromJson(_temp$)
 		endcase
 		
 		case default:
@@ -126,7 +150,17 @@ function LoadMap(_mapFile$)
 		endcase
 	endselect
 	
-	remstart
+	/*
+	// Save the map to json.
+	_temp$ = map.toJson()
+	f = OpenToWrite("maptype.json")
+	WriteString(f, _temp$)
+	CloseFile(f)
+	*/
+	
+	
+	
+	/*
 	temp as integer
     // From forum thread: https://forum.thegamecreators.com/thread/212096
     
@@ -158,7 +192,7 @@ function LoadMap(_mapFile$)
 		endif
     until fileeof(mazeFile) > 0 // Until the end of the file
     closefile(mazeFile) // y will now contain the number of lines read.
-    remend
+    */
 endfunction
 
 
@@ -181,12 +215,21 @@ function DrawAllTiles()
 					endcase
 					case TILETYPE_PATH:
 						DrawRange(map.tiles[i,j].pos, map.tiles[i,j].size, clr_darkgrey, clr_darkgrey, clr_darkgrey, clr_darkgrey, TRUE)
+						if map.tiles[i,j].dot.created and map.tiles[i,j].dot.active
+							vec2_DrawEllipse(map.tiles[i,j].dot.pos, vec2_1(map.tiles[i,j].dot.size), clr_tan, clr_tan, TRUE)
+						endif
 					endcase
 					case TILETYPE_SPAWN:
 						DrawRange(map.tiles[i,j].pos, map.tiles[i,j].size, clr_white, clr_white, clr_white, clr_white, TRUE)
 					endcase
 					case TILETYPE_WHITEWALL:
 						DrawRange(map.tiles[i,j].pos, map.tiles[i,j].size, clr_lightgrey, clr_lightgrey, clr_lightgrey, clr_lightgrey, TRUE)
+					endcase
+					case TILETYPE_EXITPATH:
+						DrawRange(map.tiles[i,j].pos, map.tiles[i,j].size, clr_darkgrey, clr_darkgrey, clr_darkgrey, clr_darkgrey, TRUE)
+					endcase
+					case TILETYPE_NODOTPATH:
+						DrawRange(map.tiles[i,j].pos, map.tiles[i,j].size, clr_darkgrey, clr_darkgrey, clr_darkgrey, clr_darkgrey, TRUE)
 					endcase
 				endselect
 			next j
@@ -196,8 +239,11 @@ endfunction
 
 // Prints the tiles in map formation.
 function PrintAllTiles()
+	Print_Boolean("Map Created: ", map.created, "")
 	if map.created
+		PrintC("V len: ") : Print(map.tiles.length)
 		for i = 0 to map.tiles.length - 1
+			PrintC(i) : PrintC(") h len: ") : Print(map.tiles[i].length)
 			for j = 0 to map.tiles[i].length - 1
 				printC(map.tiles[i,j].tileType)
 				if j < map.tiles[i].length - 1 then PrintC("    ")

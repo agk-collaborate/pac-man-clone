@@ -112,7 +112,6 @@ function MainMenu_Update()
 					MainMenu_Hide()
 					LoadMap("map.csv")
 //~					LoadMap("map.json")
-//~					map.tiles.save("csv_to.json")
 					AppState = APPSTATE_GAME
 				endif
 			else

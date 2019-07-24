@@ -13,6 +13,8 @@ PURPOSE:
 DOCUMENTATION:
 	void <-- Print_Debug(state)
 	
+	void <-- void <-- Print_Debug(state)
+	
 	float <-- resx(_scalar#)
 	float <-- resy(_scalar#)
 	
@@ -51,10 +53,21 @@ function Print_Debug(state)
 		
 		PrintC("Vitrual Resolution: ") : Print(vec2_str(res, 0))
 		
-		PrintAllTiles()
+//~		PrintAllTiles()
 	endif
 endfunction
 
+
+// Helper for printing a integer boolean.
+function Print_Boolean(_prefix$, _val, _postfix$)
+	PrintC(_prefix$)
+	if _val
+		PrintC("True")
+	else
+		PrintC("False")
+	endif
+	Print(_postfix$)
+endfunction
 
 
 
@@ -73,7 +86,6 @@ endfunction res.y * _scalar#
 function DrawRange(_pos as t_Vector_2, _size as t_Vector_2, _clr1, _clr2, _clr3, _clr4, _solid)
 	DrawBox(_pos.x, _pos.y, _pos.x + _size.x, _pos.y + _size.y, _clr1, _clr2, _clr3, _clr4, _solid)
 endfunction
-
 
 
 // Randomly shuffles an integer array.
