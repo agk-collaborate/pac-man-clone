@@ -5,7 +5,7 @@ CONTRIBUTORS:
 	IronManhood
 	
 DATE:
-	last updated 07/21/2019 by IronManhood
+	last updated 07/26/2019 by IronManhood
 	
 PURPOSE:
 	A vector 2 library.
@@ -38,6 +38,9 @@ FUNCTIONS:
 	float <-- vec2_Length(_v as t_Vector_2)
 	
 	float <-- vec2_Distance(_v1 as t_Vector_2, _v2 as t_Vector_2)
+	
+	void <-- vec2_DrawLine(_pos as t_Vector_2, _size as t_Vector_2, _clr1, _clr2)
+	void <-- vec2_DrawLineRGB(_pos as t_Vector_2, _size as t_Vector_2, _r, _g, _b)
 	
 	void <-- vec2_DrawEllipse(_pos as t_Vector_2, _radius as t_Vector_2, _clr1, _clr2, _filled)
 	
@@ -192,6 +195,17 @@ function vec2_Distance(_v1 as t_Vector_2, _v2 as t_Vector_2)
 endfunction _ret#
 
 
+
+
+// A wrapper for using vector2 with draw line.
+function vec2_DrawLine(_pos1 as t_Vector_2, _pos2 as t_Vector_2, _clr1, _clr2)
+	DrawLine(_pos1.x, _pos1.y, _pos2.x, _pos2.y, _clr2, _clr2)
+endfunction
+
+// A wrapper for using vector2 with draw line.
+function vec2_DrawLineRGB(_pos1 as t_Vector_2, _pos2 as t_Vector_2, _r, _g, _b)
+	DrawLine(_pos1.x, _pos1.y, _pos2.x, _pos2.y, _r, _g, _b)
+endfunction
 
 
 // A wrapper for using vector2 with draw ellipse.

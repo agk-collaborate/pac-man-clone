@@ -4,7 +4,7 @@ AUTHOR:
 	IronManhood
 	
 DATE:
-	last updated 07-22-2019
+	last updated 07-26-2019
 	
 PURPOSE:
 	A procedurally generated pac man map.
@@ -83,52 +83,76 @@ global map as t_Map
 
 
 
-function Map_Delete()
-	for i = 0 to map.tiles.length - 1
-		map.tiles[i].length = -1
+function Map_Delete(_map ref as t_Map)
+	for i = 0 to _map.tiles.length - 1
+		_map.tiles[i].length = -1
 	next i
-	map.tiles.length = -1
+	_map.tiles.length = -1
 	
-	map.width = 0
-	map.height = 0
+	_map.width = 0
+	_map.height = 0
 	
-	map.gridSize = 0.0
+	_map.gridSize = 0.0
 	
-	map.originPos = vec2(0.0, 0.0)
-	map.created = FALSE
+	_map.originPos = vec2(0.0, 0.0)
+	_map.created = FALSE
 endfunction
 
 
-function SaveMap(_fileName$)
-	if map.created = FALSE then exitfunction
+function SaveMap(_fileName$, _map as t_Map)
+	if _map.created = FALSE then exitfunction
 	
-	_jmap as t_Map_JSON
+	_fileType$ = GetStringToken2(_fileName$, ".", CountStringTokens2(_fileName$, "."))
 	
-	_jmap.width = map.width
-	_jmap.height = map.height
-	
-	_jmap.tileType.length = map.tiles.length
-	
-	for i = 0 to _jmap.tileType.length - 1
-		_jmap.tileType[i].length = map.tiles[i].length
-	next i
-	
-	for i = 0 to map.tiles.length - 1
-		for j = 0 to map.tiles[i].length - 1
-			_jmap.tileType[i,j] = map.tiles[i,j].tileType
-		next j
-	next i
-	
-	_ts$ = _jmap.toJson()
-	f = OpenToWrite(_fileName$)
-		WriteString(f, _ts$)
-	CloseFile(f)
+	select _fileType$
+		case "csv":
+			f = OpenToWrite(_fileName$)
+			
+			for i = 0 to _map.tiles.length - 1
+				_line$ = ""
+				for j = 0 to _map.tiles[i].length - 1
+					if j = _map.tiles[i].length - 1
+						_line$ = _line$ + str(_map.tiles[i,j].tileType)
+					else
+						_line$ = _line$ + str(_map.tiles[i,j].tileType) + ";"
+					endif
+				next j
+				WriteLine(f, _line$)
+			next i
+			
+			CloseFile(f)
+		endcase
+		
+		case "json":
+			_jmap as t_Map_JSON
+			
+			_jmap.width = _map.width
+			_jmap.height = _map.height
+			
+			_jmap.tileType.length = _map.tiles.length
+			
+			for i = 0 to _jmap.tileType.length - 1
+				_jmap.tileType[i].length = _map.tiles[i].length
+			next i
+			
+			for i = 0 to _map.tiles.length - 1
+				for j = 0 to _map.tiles[i].length - 1
+					_jmap.tileType[i,j] = _map.tiles[i,j].tileType
+				next j
+			next i
+			
+			_ts$ = _jmap.toJson()
+			f = OpenToWrite(_fileName$)
+				WriteString(f, _ts$)
+			CloseFile(f)
+		endcase
+	endselect
 endfunction
 
 
 // Loads a map from file.
-function LoadMap(_mapFile$)
-	if GetFileExists(_mapFile$) = 0 or map.created = TRUE then exitfunction
+function LoadMap(_mapFile$, _map ref as t_Map)
+	if GetFileExists(_mapFile$) = 0 or _map.created = TRUE then exitfunction
 	
 	_fileType$ = GetStringToken2(_mapFile$, ".", CountStringTokens2(_mapFile$, "."))
 	
@@ -137,34 +161,34 @@ function LoadMap(_mapFile$)
 			f = OpenToRead(_mapFile$)
 			while FileEOF(f) = FALSE
 				_line$ = ReadLine(f)
-				map.tiles.length = map.tiles.length + 1
-				map.tiles[map.tiles.length].length = CountStringTokens2(_line$, ";")
-				for i = 0 to map.tiles[map.tiles.length].length - 1
-					map.tiles[map.tiles.length,i].tileType = val(GetStringToken2(_line$, ";", i + 1))
+				_map.tiles.length = _map.tiles.length + 1
+				_map.tiles[_map.tiles.length].length = CountStringTokens2(_line$, ";")
+				for i = 0 to _map.tiles[_map.tiles.length].length - 1
+					_map.tiles[_map.tiles.length,i].tileType = val(GetStringToken2(_line$, ";", i + 1))
 				next i
 			endwhile
 			CloseFile(f)
 			
-			map.created = TRUE
+			_map.created = TRUE
 			
-			map.height = map.tiles.length
-			map.width = map.tiles[0].length
+			_map.height = _map.tiles.length
+			_map.width = _map.tiles[0].length
 			
-			map.gridSize = resy(0.8) / map.width
+			_map.gridSize = resy(0.8) / _map.width
 			
-			map.originPos.x = resx(0.5) - ((map.gridSize * map.width) * 0.5)
-			map.originPos.y = resy(0.5) - ((map.gridSize * map.height) * 0.5)
+			_map.originPos.x = resx(0.5) - ((_map.gridSize * _map.width) * 0.5)
+			_map.originPos.y = resy(0.5) - ((_map.gridSize * _map.height) * 0.5)
 			
-			for i = 0 to map.tiles.length - 1
-				for j = 0 to map.tiles[i].length - 1
-					map.tiles[i,j].size = vec2(map.gridSize, map.gridSize)
-					map.tiles[i,j].pos.x = (j * map.tiles[i,j].size.x) + map.originPos.x
-					map.tiles[i,j].pos.y = (i * map.tiles[i,j].size.y) + map.originPos.y
-					if map.tiles[i,j].tileType = TILETYPE_PATH
-						map.tiles[i,j].dot.created = TRUE
-						map.tiles[i,j].dot.active = TRUE
-						map.tiles[i,j].dot.size = map.gridSize * 0.125
-						map.tiles[i,j].dot.pos = vec2_Add(map.tiles[i,j].pos, vec2_DivNum1(map.tiles[i,j].size, 2.0))
+			for i = 0 to _map.tiles.length - 1
+				for j = 0 to _map.tiles[i].length - 1
+					_map.tiles[i,j].size = vec2(_map.gridSize, _map.gridSize)
+					_map.tiles[i,j].pos.x = (j * _map.tiles[i,j].size.x) + _map.originPos.x
+					_map.tiles[i,j].pos.y = (i * _map.tiles[i,j].size.y) + _map.originPos.y
+					if _map.tiles[i,j].tileType = TILETYPE_PATH
+						_map.tiles[i,j].dot.created = TRUE
+						_map.tiles[i,j].dot.active = TRUE
+						_map.tiles[i,j].dot.size = _map.gridSize * 0.125
+						_map.tiles[i,j].dot.pos = vec2_Add(_map.tiles[i,j].pos, vec2_DivNum1(_map.tiles[i,j].size, 2.0))
 					endif
 				next j
 			next i
@@ -183,32 +207,32 @@ function LoadMap(_mapFile$)
 			_jmap.fromJson(_temp$)
 			
 			
-			map.created = TRUE
+			_map.created = TRUE
 			
-			map.width = _jmap.width
-			map.height = _jmap.height
+			_map.width = _jmap.width
+			_map.height = _jmap.height
 			
-			map.gridSize = resy(0.8) / map.width
+			_map.gridSize = resy(0.8) / _map.width
 			
-			map.originPos.x = resx(0.5) - ((map.gridSize * map.width) * 0.5)
-			map.originPos.y = resy(0.5) - ((map.gridSize * map.height) * 0.5)
+			_map.originPos.x = resx(0.5) - ((_map.gridSize * _map.width) * 0.5)
+			_map.originPos.y = resy(0.5) - ((_map.gridSize * _map.height) * 0.5)
 			
-			map.tiles.length = map.height
-			for i = 0 to map.tiles.length - 1
-				map.tiles[i].length = map.width
+			_map.tiles.length = _map.height
+			for i = 0 to _map.tiles.length - 1
+				_map.tiles[i].length = _map.width
 			next i
 			
-			for i = 0 to map.tiles.length - 1
-				for j = 0 to map.tiles[i].length - 1
-					map.tiles[i,j].tileType = _jmap.tileType[i,j]
-					map.tiles[i,j].size = vec2(map.gridSize, map.gridSize)
-					map.tiles[i,j].pos.x = (j * map.tiles[i,j].size.x) + map.originPos.x
-					map.tiles[i,j].pos.y = (i * map.tiles[i,j].size.y) + map.originPos.y
-					if map.tiles[i,j].tileType = TILETYPE_PATH
-						map.tiles[i,j].dot.created = TRUE
-						map.tiles[i,j].dot.active = TRUE
-						map.tiles[i,j].dot.size = map.gridSize * 0.125
-						map.tiles[i,j].dot.pos = vec2_Add(map.tiles[i,j].pos, vec2_DivNum1(map.tiles[i,j].size, 2.0))
+			for i = 0 to _map.tiles.length - 1
+				for j = 0 to _map.tiles[i].length - 1
+					_map.tiles[i,j].tileType = _jmap.tileType[i,j]
+					_map.tiles[i,j].size = vec2(_map.gridSize, _map.gridSize)
+					_map.tiles[i,j].pos.x = (j * _map.tiles[i,j].size.x) + _map.originPos.x
+					_map.tiles[i,j].pos.y = (i * _map.tiles[i,j].size.y) + _map.originPos.y
+					if _map.tiles[i,j].tileType = TILETYPE_PATH
+						_map.tiles[i,j].dot.created = TRUE
+						_map.tiles[i,j].dot.active = TRUE
+						_map.tiles[i,j].dot.size = _map.gridSize * 0.125
+						_map.tiles[i,j].dot.pos = vec2_Add(_map.tiles[i,j].pos, vec2_DivNum1(_map.tiles[i,j].size, 2.0))
 					endif
 				next j
 			next i
@@ -218,52 +242,6 @@ function LoadMap(_mapFile$)
 			exitfunction
 		endcase
 	endselect
-	
-//~	SaveMap("newmap.json")
-	
-	/*
-	// Save the map to json.
-	_temp$ = map.toJson()
-	f = OpenToWrite("maptype.json")
-	WriteString(f, _temp$)
-	CloseFile(f)
-	*/
-	
-	
-	
-	/*
-	temp as integer
-    // From forum thread: https://forum.thegamecreators.com/thread/212096
-    
-    mazeFile = openToRead("map.csv")
-    // Set first index of array to zero, this is available to use, but is not being used.
-    y = 0
-    repeat
-		line$ = readline(mazeFile) // Read a line from file
-		numParts = countStringTokens(line$ , ";" ) // Count number of csv parameters in line
-		if numParts > 0 // If more than none - ie not a blank line
-			inc y // Increase y index
-			for x = 1 to numParts // Loop through parameters on this line, using x array index
-			temp = val(getstringToken(line$ , ";" , x)) // find type
-			if temp = 0
-				map.tiles[x,y].tileType = TILETYPE_WALL
-			elseif temp = 1
-				map.tiles[x,y].tileType = TILETYPE_PATH
-			elseif temp = 2
-				map.tiles[x,y].tileType = TILETYPE_WALL
-			elseif temp = 3
-				map.tiles[x,y].tileType = TILETYPE_SPAWN
-			elseif temp = 4
-				map.tiles[x,y].tileType = TILETYPE_PATH
-			elseif temp = 5
-				map.tiles[x,y].tileType = TILETYPE_WHITEWALL
-			endif
-			map.tiles[x , y].tileType = val(getstringToken(line$ , ";" , x)) // populate array
-			next x
-		endif
-    until fileeof(mazeFile) > 0 // Until the end of the file
-    closefile(mazeFile) // y will now contain the number of lines read.
-    */
 endfunction
 
 
@@ -275,32 +253,32 @@ endfunction
 
 // A temporary function for representing tiles.
 // Simply draws a box for each cell.
-function DrawAllTiles()
-	if map.created
-		for i = 0 to map.tiles.length - 1
-			for j = 0 to map.tiles[i].length - 1
-				select map.tiles[i,j].tileType
+function DrawAllTiles(_map as t_Map)
+	if _map.created
+		for i = 0 to _map.tiles.length - 1
+			for j = 0 to _map.tiles[i].length - 1
+				select _map.tiles[i,j].tileType
 					case TILETYPE_WALL:
-						DrawRange(map.tiles[i,j].pos, map.tiles[i,j].size, clr_lightblue, clr_lightblue, clr_lightblue, clr_lightblue, TRUE)
-						DrawRange(map.tiles[i,j].pos, map.tiles[i,j].size, clr_violet, clr_violet, clr_violet, clr_violet, FALSE)
+						DrawRange(_map.tiles[i,j].pos, _map.tiles[i,j].size, clr_lightblue, clr_lightblue, clr_lightblue, clr_lightblue, TRUE)
+						DrawRange(_map.tiles[i,j].pos, _map.tiles[i,j].size, clr_violet, clr_violet, clr_violet, clr_violet, FALSE)
 					endcase
 					case TILETYPE_PATH:
-						DrawRange(map.tiles[i,j].pos, map.tiles[i,j].size, clr_darkgrey, clr_darkgrey, clr_darkgrey, clr_darkgrey, TRUE)
-						if map.tiles[i,j].dot.created and map.tiles[i,j].dot.active
-							vec2_DrawEllipse(map.tiles[i,j].dot.pos, vec2_1(map.tiles[i,j].dot.size), clr_tan, clr_tan, TRUE)
+						DrawRange(_map.tiles[i,j].pos, _map.tiles[i,j].size, clr_darkgrey, clr_darkgrey, clr_darkgrey, clr_darkgrey, TRUE)
+						if _map.tiles[i,j].dot.created and _map.tiles[i,j].dot.active
+							vec2_DrawEllipse(_map.tiles[i,j].dot.pos, vec2_1(_map.tiles[i,j].dot.size), clr_tan, clr_tan, TRUE)
 						endif
 					endcase
 					case TILETYPE_SPAWN:
-						DrawRange(map.tiles[i,j].pos, map.tiles[i,j].size, clr_white, clr_white, clr_white, clr_white, TRUE)
+						DrawRange(_map.tiles[i,j].pos, _map.tiles[i,j].size, clr_white, clr_white, clr_white, clr_white, TRUE)
 					endcase
 					case TILETYPE_WHITEWALL:
-						DrawRange(map.tiles[i,j].pos, map.tiles[i,j].size, clr_lightgrey, clr_lightgrey, clr_lightgrey, clr_lightgrey, TRUE)
+						DrawRange(_map.tiles[i,j].pos, _map.tiles[i,j].size, clr_lightgrey, clr_lightgrey, clr_lightgrey, clr_lightgrey, TRUE)
 					endcase
 					case TILETYPE_EXITPATH:
-						DrawRange(map.tiles[i,j].pos, map.tiles[i,j].size, clr_darkgrey, clr_darkgrey, clr_darkgrey, clr_darkgrey, TRUE)
+						DrawRange(_map.tiles[i,j].pos, _map.tiles[i,j].size, clr_darkgrey, clr_darkgrey, clr_darkgrey, clr_darkgrey, TRUE)
 					endcase
 					case TILETYPE_NODOTPATH:
-						DrawRange(map.tiles[i,j].pos, map.tiles[i,j].size, clr_darkgrey, clr_darkgrey, clr_darkgrey, clr_darkgrey, TRUE)
+						DrawRange(_map.tiles[i,j].pos, _map.tiles[i,j].size, clr_darkgrey, clr_darkgrey, clr_darkgrey, clr_darkgrey, TRUE)
 					endcase
 				endselect
 			next j
@@ -309,15 +287,15 @@ function DrawAllTiles()
 endfunction
 
 // Prints the tiles in map formation.
-function PrintAllTiles()
-	Print_Boolean("Map Created: ", map.created, "")
-	if map.created
-		PrintC("V len: ") : Print(map.tiles.length)
-		for i = 0 to map.tiles.length - 1
-			PrintC(i) : PrintC(") h len: ") : Print(map.tiles[i].length)
-			for j = 0 to map.tiles[i].length - 1
-				printC(map.tiles[i,j].tileType)
-				if j < map.tiles[i].length - 1 then PrintC("    ")
+function PrintAllTiles(_map as t_Map)
+	Print_Boolean("Map Created: ", _map.created, "")
+	if _map.created
+		PrintC("V len: ") : Print(_map.tiles.length)
+		for i = 0 to _map.tiles.length - 1
+			PrintC(i) : PrintC(") h len: ") : Print(_map.tiles[i].length)
+			for j = 0 to _map.tiles[i].length - 1
+				printC(_map.tiles[i,j].tileType)
+				if j < _map.tiles[i].length - 1 then PrintC("    ")
 			next j
 			print("")
 		next i
@@ -326,4 +304,25 @@ endfunction
 
 
 
-
+function GetTileTypeString(_type)
+	select _type
+		case TILETYPE_WALL:
+			exitfunction "Wall"
+		endcase
+		case TILETYPE_PATH:
+			exitfunction "Path"
+		endcase
+		case TILETYPE_SPAWN:
+			exitfunction "Spawn"
+		endcase
+		case TILETYPE_WHITEWALL:
+			exitfunction "White Wall"
+		endcase
+		case TILETYPE_EXITPATH:
+			exitfunction "Exit Path"
+		endcase
+		case TILETYPE_NODOTPATH:
+			exitfunction "No Dot Path"
+		endcase
+	endselect
+endfunction "Null"

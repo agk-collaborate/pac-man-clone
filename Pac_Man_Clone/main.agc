@@ -9,9 +9,11 @@
 #include "source/ghosts.agc"
 #include "source/pac-man.agc"
 #include "source/keys.agc"
+#include "source/editor.agc"
 
 #constant APPSTATE_MAINMENU	0
 #constant APPSTATE_GAME		1
+#constant APPSTATE_EDITOR	2
 
 global res as t_Vector_2
 res.x = GetMaxDeviceWidth() : res.y = GetMaxDeviceHeight()
@@ -44,6 +46,7 @@ SetPrintSize(PrintSize)
 
 global clr_white as integer
 global clr_red as integer
+global clr_green as integer
 global clr_blue as integer
 global clr_lightblue as integer
 global clr_lightgrey as integer
@@ -52,6 +55,7 @@ global clr_violet as integer
 global clr_tan as integer
 clr_white = MakeColor(255, 255, 255)
 clr_red = MakeColor(255, 0, 0)
+clr_green = MakeColor(0, 255, 0)
 clr_blue = MakeColor(0, 0, 255)
 clr_lightblue = MakeColor(12, 160, 225)
 clr_lightgrey = MakeColor(161, 161, 161)
@@ -66,10 +70,10 @@ MainMenu_Create()
 
 
 
-do	
+do
 	UpdateApp(AppState)
 	
-	Print_Debug(TRUE)
+	Print_Debug(FALSE)
 	
 	Sync()
 loop
@@ -90,9 +94,17 @@ function UpdateApp(state)
 			endif
 		endcase
 		case APPSTATE_GAME:
-			DrawAllTiles()
+			DrawAllTiles(map)
 			if GetRawKeyPressed(27) // Escape
-				Map_Delete()
+				Map_Delete(map)
+				MainMenu_Show()
+				AppState = APPSTATE_MAINMENU
+			endif
+		endcase
+		case APPSTATE_EDITOR:
+			UpdateEditor()
+			if GetRawKeyPressed(27) // Escape
+				DeleteEditor()
 				MainMenu_Show()
 				AppState = APPSTATE_MAINMENU
 			endif

@@ -4,7 +4,7 @@ CONTRIBUTORS:
 	IronManhood
 	
 DATE:
-	last updated 07/18/2019 by IronManhood
+	last updated 07/26/2019 by IronManhood
 	
 PURPOSE:
 	Source code for a simple main menu screen.
@@ -27,6 +27,9 @@ type t_Main_Menu
 	
 	play_txtID as integer
 	play_sprID as integer
+	
+	edit_txtID as integer
+	edit_sprID as integer
 	
 	created as integer
 	active as integer
@@ -61,6 +64,22 @@ function MainMenu_Create()
 		// Position and size the button sprite to fit the text.
 		SetSpriteSize(mainmenu.play_sprID, GetTextTotalWidth(mainmenu.play_txtID) * 1.1, GetTextTotalHeight(mainmenu.play_txtID) * 1.1)
 		SetSpritePositionByOffset(mainmenu.play_sprID, GetTextX(mainmenu.play_txtID), GetTextY(mainmenu.play_txtID) + (GetTextTotalHeight(mainmenu.play_txtID) * 0.5))
+		
+		
+		
+		// Create editor button background sprite.
+		mainmenu.edit_sprID = CreateSprite(0)
+		SetSpriteColor(mainmenu.edit_sprID, 0, 0, 255, 255)
+		
+		// Create editor button text.
+		mainmenu.edit_txtID = CreateText("Editor")
+		SetTextSize(mainmenu.edit_txtID, resy(0.1))
+		SetTextAlignment(mainmenu.edit_txtID, 1)
+		SetTextPosition(mainmenu.edit_txtID, resx(0.5), resy(0.6))
+		
+		// Position and size the button sprite to fit the text.
+		SetSpriteSize(mainmenu.edit_sprID, GetTextTotalWidth(mainmenu.edit_txtID) * 1.1, GetTextTotalHeight(mainmenu.edit_txtID) * 1.1)
+		SetSpritePositionByOffset(mainmenu.edit_sprID, GetTextX(mainmenu.edit_txtID), GetTextY(mainmenu.edit_txtID) + (GetTextTotalHeight(mainmenu.edit_txtID) * 0.5))
 	endif
 endfunction
 
@@ -72,6 +91,8 @@ endfunction
 function MainMenu_Delete()
 	if GetTextExists(mainmenu.title_txtID) then DeleteText(mainmenu.title_txtID)
 	if GetTextExists(mainmenu.play_txtID) then DeleteText(mainmenu.play_txtID)
+	if GetSpriteExists(mainmenu.play_sprID) then DeleteSprite(mainmenu.play_sprID)
+	if GetTextExists(mainmenu.edit_txtID) then DeleteText(mainmenu.edit_txtID)
 	if GetSpriteExists(mainmenu.play_sprID) then DeleteSprite(mainmenu.play_sprID)
 	mainmenu.created = FALSE
 	mainmenu.active = FALSE
@@ -87,6 +108,9 @@ function MainMenu_Hide()
 	SetTextVisible(mainmenu.play_txtID, FALSE)
 	SetSpriteVisible(mainmenu.play_sprID, FALSE)
 	SetSpriteActive(mainmenu.play_sprID, FALSE)
+	SetTextVisible(mainmenu.edit_txtID, FALSE)
+	SetSpriteVisible(mainmenu.edit_sprID, FALSE)
+	SetSpriteActive(mainmenu.edit_sprID, FALSE)
 	mainmenu.active = FALSE
 endfunction
 
@@ -96,6 +120,9 @@ function MainMenu_Show()
 	SetTextVisible(mainmenu.play_txtID, TRUE)
 	SetSpriteVisible(mainmenu.play_sprID, TRUE)
 	SetSpriteActive(mainmenu.play_sprID, TRUE)
+	SetTextVisible(mainmenu.edit_txtID, TRUE)
+	SetSpriteVisible(mainmenu.edit_sprID, TRUE)
+	SetSpriteActive(mainmenu.edit_sprID, TRUE)
 	mainmenu.active = TRUE
 endfunction
 
@@ -110,12 +137,23 @@ function MainMenu_Update()
 				SetSpriteColor(mainmenu.play_sprID, 0, 255, 0, 255)
 				if GetPointerPressed()
 					MainMenu_Hide()
-//~					LoadMap("map.csv")
-					LoadMap("map.json")
+//~					LoadMap("map.csv", map)
+					LoadMap("map.json", map)
 					AppState = APPSTATE_GAME
 				endif
 			else
 				SetSpriteColor(mainmenu.play_sprID, 0, 0, 255, 255)
+			endif
+			
+			if GetSpriteHitTest(mainmenu.edit_sprID, GetPointerX(), GetPointerY())
+				SetSpriteColor(mainmenu.edit_sprID, 0, 255, 0, 255)
+				if GetPointerPressed()
+					MainMenu_Hide()
+					CreateEditorUI()
+					AppState = APPSTATE_EDITOR
+				endif
+			else
+				SetSpriteColor(mainmenu.edit_sprID, 0, 0, 255, 255)
 			endif
 		endif
 	endif

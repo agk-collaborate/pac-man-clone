@@ -5,7 +5,7 @@ CONTRIBUTORS:
 	IronManhood
 	
 DATE:
-	last updated 07/20/2019 by IronManhood
+	last updated 07/26/2019 by IronManhood
 	
 PURPOSE:
 	A file for random bits of code.
@@ -25,6 +25,11 @@ DOCUMENTATION:
 		
 	float <-- clamp_i(_val, _min, _max)
 	float <-- clamp_f(_val#, _min#, _max#)
+	
+	integer <-- max_i(_val1, _val2)
+	float <-- max_f(_val1#, _val2#)
+	integer <-- min_i(_val1, _val2)
+	float <-- min_f(_val1#, _val2#)
 	
 FUNCTIONS:
 	
@@ -133,9 +138,36 @@ function clamp_f(_val#, _min#, _max#)
 endfunction _val#
 
 
+// Return false if x or y is outside the bounds.
+function inBounds(_x#, _y#, _pos as t_Vector_2, _size as t_Vector_2)
+	if _x# < _pos.x then exitfunction FALSE
+	if _y# < _pos.y then exitfunction FALSE
+	if _x# > _pos.x + _size.x then exitfunction FALSE
+	if _y# > _pos.y + _size.y then exitfunction FALSE
+endfunction TRUE
 
 
 
+// Return the larger value.
+function max_i(_val1, _val2)
+	if _val1 > _val2 then exitfunction _val1
+endfunction _val2
+
+// Return the larger value.
+function max_f(_val1#, _val2#)
+	if _val1# > _val2# then exitfunction _val1#
+endfunction _val2#
+
+
+// Return the smaller value.
+function min_i(_val1, _val2)
+	if _val1 < _val2 then exitfunction _val1
+endfunction _val2
+
+// Return the smaller value.
+function min_f(_val1#, _val2#)
+	if _val1# < _val2# then exitfunction _val1#
+endfunction _val2#
 
 
 
