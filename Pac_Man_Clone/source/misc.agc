@@ -1,5 +1,3 @@
-
-
 /*
 CONTRIBUTORS:
 	IronManhood
@@ -32,23 +30,13 @@ DOCUMENTATION:
 	float <-- min_f(_val1#, _val2#)
 	
 FUNCTIONS:
-	
-	
+		
 EXAMPLE:
 
 */
 
-
-
 #constant TRUE	1
 #constant FALSE	0
-
-
-
-
-
-
-
 
 // A convenience function to help with debugging.
 function Print_Debug(state)
@@ -62,7 +50,6 @@ function Print_Debug(state)
 	endif
 endfunction
 
-
 // Helper for printing a integer boolean.
 function Print_Boolean(_prefix$, _val, _postfix$)
 	PrintC(_prefix$)
@@ -74,8 +61,6 @@ function Print_Boolean(_prefix$, _val, _postfix$)
 	Print(_postfix$)
 endfunction
 
-
-
 // Returns a percentage of the resolution x axis.
 // _scalar# = 0.0 to 1.0
 function resx(_scalar#)
@@ -86,12 +71,10 @@ endfunction res.x * _scalar#
 function resy(_scalar#)
 endfunction res.y * _scalar#
 
-
 // A wrapper for using vector2 with draw box.
 function DrawRange(_pos as t_Vector_2, _size as t_Vector_2, _clr1, _clr2, _clr3, _clr4, _solid)
 	DrawBox(_pos.x, _pos.y, _pos.x + _size.x, _pos.y + _size.y, _clr1, _clr2, _clr3, _clr4, _solid)
 endfunction
-
 
 // Randomly shuffles an integer array.
 // The larger the array the slower this will be.
@@ -109,8 +92,6 @@ function shuffleIntArray(_irr ref as integer[])
 	next i
 endfunction
 
-
-
 // Returns TRUE if the value is within min/max. integer
 function inrange_i(_val, _min, _max)
 	if _val < _min then exitfunction FALSE
@@ -122,8 +103,6 @@ function inrange_f(_val#, _min#, _max#)
 	if _val# < _min# then exitfunction FALSE
 	if _val# > _max# then exitfunction FALSE
 endfunction TRUE
-
-
 
 // Clamp a value between min/max. integer
 function clamp_i(_val, _min, _max)
@@ -137,7 +116,6 @@ function clamp_f(_val#, _min#, _max#)
 	if _val# > _max# then exitfunction _max#
 endfunction _val#
 
-
 // Return false if x or y is outside the bounds.
 function inBounds(_x#, _y#, _pos as t_Vector_2, _size as t_Vector_2)
 	if _x# < _pos.x then exitfunction FALSE
@@ -145,8 +123,6 @@ function inBounds(_x#, _y#, _pos as t_Vector_2, _size as t_Vector_2)
 	if _x# > _pos.x + _size.x then exitfunction FALSE
 	if _y# > _pos.y + _size.y then exitfunction FALSE
 endfunction TRUE
-
-
 
 // Return the larger value.
 function max_i(_val1, _val2)
@@ -168,8 +144,6 @@ endfunction _val2
 function min_f(_val1#, _val2#)
 	if _val1# < _val2# then exitfunction _val1#
 endfunction _val2#
-
-
 
 // From AGK docs
 Function TextInput(textin$,length)
@@ -198,4 +172,3 @@ Function TextInput(textin$,length)
     sync()
 
 endfunction text$
-

@@ -1,4 +1,3 @@
-
 /*
 CONTRIBUTORS:
 	SpeckyYT
@@ -11,14 +10,11 @@ PURPOSE:
 
 DOCUMENTATION:
 	
-
 FUNCTIONS:
-	
 	
 EXAMPLE:
 
 */
-
 
 type pacman
 	pos as	t_Vector_2			//Pac-Man's position (x and y)

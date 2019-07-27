@@ -1,4 +1,3 @@
-
 /*
 CONTRIBUTORS:
 	IronManhood
@@ -11,16 +10,11 @@ PURPOSE:
 
 DOCUMENTATION:
 	
-
 FUNCTIONS:
-	
 	
 EXAMPLE:
 
 */
-
-
-
 
 type t_Main_Menu
 	title_txtID as integer
@@ -35,10 +29,7 @@ type t_Main_Menu
 	active as integer
 endtype
 
-
 global mainmenu as t_Main_Menu
-
-
 
 function MainMenu_Create()
 	if mainmenu.created = FALSE
@@ -64,9 +55,7 @@ function MainMenu_Create()
 		// Position and size the button sprite to fit the text.
 		SetSpriteSize(mainmenu.play_sprID, GetTextTotalWidth(mainmenu.play_txtID) * 1.1, GetTextTotalHeight(mainmenu.play_txtID) * 1.1)
 		SetSpritePositionByOffset(mainmenu.play_sprID, GetTextX(mainmenu.play_txtID), GetTextY(mainmenu.play_txtID) + (GetTextTotalHeight(mainmenu.play_txtID) * 0.5))
-		
-		
-		
+				
 		// Create editor button background sprite.
 		mainmenu.edit_sprID = CreateSprite(0)
 		SetSpriteColor(mainmenu.edit_sprID, 0, 0, 255, 255)
@@ -83,10 +72,6 @@ function MainMenu_Create()
 	endif
 endfunction
 
-
-
-
-
 // Completely delete the menu.
 function MainMenu_Delete()
 	if GetTextExists(mainmenu.title_txtID) then DeleteText(mainmenu.title_txtID)
@@ -98,9 +83,6 @@ function MainMenu_Delete()
 	mainmenu.active = FALSE
 	mainmenu.title_txtID = 0
 endfunction
-
-
-
 
 // Hide the menu.
 function MainMenu_Hide()
@@ -125,9 +107,6 @@ function MainMenu_Show()
 	SetSpriteActive(mainmenu.edit_sprID, TRUE)
 	mainmenu.active = TRUE
 endfunction
-
-
-
 
 // Update the button.
 function MainMenu_Update()
@@ -158,10 +137,3 @@ function MainMenu_Update()
 		endif
 	endif
 endfunction
-
-
-
-
-
-
-

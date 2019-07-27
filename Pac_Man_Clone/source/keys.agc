@@ -1,4 +1,3 @@
-
 /*
 AUTHOR:
 	IronManhood
@@ -101,7 +100,6 @@ EXAMPLE:
 #constant KEY_RIGHTBRACKET	221
 #constant KEY_APOSTROPHE	222
 
-
 #constant KEY_LMB_STATE GetRawMouseLeftState()
 #constant KEY_RMB_STATE GetRawMouseRightState()
 #constant KEY_MMB_STATE GetRawMouseMiddleState()
@@ -113,7 +111,6 @@ EXAMPLE:
 #constant KEY_LMB_RELEASED GetRawMouseLeftReleased()
 #constant KEY_RMB_RELEASED GetRawMouseRightReleased()
 #constant KEY_MMB_RELEASED GetRawMouseMiddleReleased()
-
 
 #constant KEY_BACKSPACE_STATE GetRawKeyState( 8 )
 #constant KEY_TAB_STATE GetRawKeyState( 9 )
