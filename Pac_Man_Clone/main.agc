@@ -1,7 +1,6 @@
 // Project: Pac_Man_Clone
 // Created: 19-07-18
 
-
 #include "source/misc.agc"
 #include "source/vector2.agc"
 #include "source/mainMenu.agc"
@@ -25,7 +24,6 @@ global AppState as integer = 0
 
 global mediaDirectory as string
 mediaDirectory = GetReadPath() + "media"
-
 
 // show all errors
 SetErrorMode(2)
@@ -67,12 +65,7 @@ clr_violet = MakeColor(225, 190, 225)
 clr_tan = MakeColor(255,224,189)
 clr_yellow = MakeColor(255,255,0)
 
-
-
 MainMenu_Create()
-
-
-
 
 do
 	UpdateApp(AppState)
@@ -82,10 +75,10 @@ do
 	Sync()
 loop
 
-
 // This will control what state the app is in.
 // Case 0 is main menu.
 // Case 1 is game.
+// Case 2 is editor.
 function UpdateApp(state)
 	select state
 		case APPSTATE_MAINMENU:
@@ -115,5 +108,3 @@ function UpdateApp(state)
 		endcase
 	endselect
 endfunction
-
-

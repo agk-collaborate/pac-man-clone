@@ -1,4 +1,3 @@
-
 /*
 CONTRIBUTORS:
 	SpeckyYT
@@ -20,19 +19,15 @@ EXAMPLE:
 
 */
 
-
-
 type Ghost
 	pos as t_Vector_2			//Ghost's position (x and y)
 	target as t_Vector_2		//Ghost's target's position (x and y)
-	targetHelp as t_Vector_2//Help for the "misalignment" of the target (Y)
-	dir as integer					//Ghost's facing direction
-	house as integer				//If ghost is in the Ghost House or not
-	state as integer				//0 (eaten) / 1 (chase) / 2 (scatter) / 3 (frightened)
+	targetHelp as t_Vector_2	//Help for the "misalignment" of the target (Y)
+	dir as integer				//Ghost's facing direction
+	house as integer			//If ghost is in the Ghost House or not
+	state as integer			//0 (eaten) / 1 (chase) / 2 (scatter) / 3 (frightened)
 	distToPac as integer		//Ghost's distance to Pac-Man
 endtype
-
-
 
 global ghostB as Ghost
 global ghostP as Ghost
@@ -60,8 +55,6 @@ function updateScatterHomes()
 
 endfunction
 
-
-
 function updateGhostTarget()
 	
 	updateScatterHomes()
@@ -69,9 +62,7 @@ function updateGhostTarget()
 	//Blinky
 	ghostB.target.x = pacman.pos.x
 	ghostP.target.y = pacman.pos.y
-	
-	
-	
+		
 	//Pinky
 	if pacman.dir = 0
 		ghostP.targetHelp.X = -4
@@ -90,8 +81,6 @@ function updateGhostTarget()
 	ghostP.target.X = pacman.pos.X + ghostP.targetHelp.X
 	ghostP.target.Y = pacman.pos.Y + ghostP.targetHelp.Y
 	
-	
-	
 	//Inky
 	if pacman.dir = 0
 		ghostI.targetHelp.X = -2
@@ -109,8 +98,6 @@ function updateGhostTarget()
 	
 	ghostI.targetHelp.X = pacman.pos.X + ghostI.targetHelp.X - ghostB.pos.X
 	ghostI.targetHelp.Y = pacman.pos.Y + ghostI.targetHelp.Y - ghostB.pos.Y
-	
-	
 	
 	//Clyde
 	ghostC.distToPac = vec2_Distance(ghostC.pos, pacman.pos)

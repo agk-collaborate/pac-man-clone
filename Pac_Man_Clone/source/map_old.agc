@@ -1,5 +1,3 @@
-
-
 /*
 CONTRIBUTORS:
 	IronManhood
@@ -12,7 +10,6 @@ PURPOSE:
 
 DOCUMENTATION:
 	
-
 FUNCTIONS:
 	void <-- Map_Generate(_seed, _w, _h, _gridSize#)
 	
@@ -30,21 +27,16 @@ EXAMPLE:
 
 */
 
-
 #constant CELLTYPE_WALL		0 // For blocking movement.
 #constant CELLTYPE_PATH		1 // For movement.
 #constant CELLTYPE_SPAWN		2 // For ghost block path.
 #constant CELLTYPE_WHITEWALL	3 // For ghost block wall.
-
-
 
 type t_Cell
 	cellType as integer
 	pos as t_Vector_2
 	size as t_Vector_2
 endtype
-
-
 
 type t_Map
 	originPos as t_Vector_2
@@ -61,11 +53,8 @@ type t_Map
 	created as integer
 endtype
 
-
-
 global map as t_Map
 global seed as integer = 1
-
 
 function Map_Generate_Random(_scalar#, _sparsity#)
 	_w = Random(16, 128)
@@ -73,7 +62,6 @@ function Map_Generate_Random(_scalar#, _sparsity#)
 	_s# = resy(_scalar#) / _h
 	Map_Generate(seed, _w, _h, _s#, FALSE, _sparsity#)
 endfunction
-
 
 function Map_Generate(_seed, _w, _h, _gridSize#, _symmetrical, _sparsity#)
 	if map.created = FALSE
@@ -116,7 +104,6 @@ function Map_Generate(_seed, _w, _h, _gridSize#, _symmetrical, _sparsity#)
 		
 		RemoveDeadEnds(_qw, _qh)
 		
-		
 		// Cut walls. Start at 1 to avoid the border walls.
 		for i = 1 to map.cells.length - 2
 			for j = 1 to map.cells[i].length - 2
@@ -129,9 +116,7 @@ function Map_Generate(_seed, _w, _h, _gridSize#, _symmetrical, _sparsity#)
 				endif
 			next j
 		next i
-		
-		
-		
+				
 		// Check for cavities.
 		for i = 0 to map.cells.length - 1
 			for j = 0 to map.cells[i].length - 1
@@ -142,8 +127,6 @@ function Map_Generate(_seed, _w, _h, _gridSize#, _symmetrical, _sparsity#)
 				endif
 			next j
 		next i
-		
-		
 		
 		// Make symmetrical.
 		if _symmetrical
@@ -168,8 +151,6 @@ function Map_Generate(_seed, _w, _h, _gridSize#, _symmetrical, _sparsity#)
 				sync()
 			next i
 		endif
-		
-		
 		
 		// Add Ghost Box.
 		_gbsX = 3
@@ -198,8 +179,6 @@ function Map_Generate(_seed, _w, _h, _gridSize#, _symmetrical, _sparsity#)
 	endif
 endfunction
 
-
- 
 // Check if cell is surrounded by paths.
 function IsIsland(_i, _j)
 	if _i - 1 < 0 then exitfunction FALSE
@@ -219,7 +198,6 @@ function IsIsland(_i, _j)
 	if map.cells[_i,_j - 1].cellType = CELLTYPE_WALL then exitfunction FALSE // Left
 endfunction TRUE
 
-
 // Completely reset all map data.
 function Map_Delete()
 	for i = 0 to map.cells.length - 1
@@ -236,8 +214,6 @@ function Map_Delete()
 	
 	map.created = FALSE
 endfunction
-
-
 
 // Recursively step through the map.cells array to generate a maze.
 function MapCellRecursion(_h, _v, _cellType)
@@ -297,7 +273,6 @@ function MapCellRecursion(_h, _v, _cellType)
 	next i
 endfunction
 
-
 function RemoveDeadEnds(_h, _v)
 		for i = 0 to map.cells.length - 1
 			for j = 0 to map.cells[i].length - 1
@@ -306,13 +281,10 @@ function RemoveDeadEnds(_h, _v)
 		next i
 endfunction
 
-
-
 function getAdjacentPaths(_h, _v)
 	_arr as integer[0,0]
 	
 endfunction
-
 
 // Returns a shuffled integer array.
 function generateRandomDirections()
@@ -322,9 +294,6 @@ function generateRandomDirections()
 	next i
 	shuffleIntArray(_arr)
 endfunction _arr
-
-
-
 
 // A temporary function for representing cells.
 // Simply draws a box for each cell.
@@ -352,7 +321,6 @@ function DrawAllCells()
 	endif
 endfunction
 
-
 // Prints the cells in map formation.
 function PrintAllCells()
 	if map.created
@@ -365,14 +333,6 @@ function PrintAllCells()
 		next i
 	endif
 endfunction
-
-
-
-
-
-
-
-
 
 /*
 			// this goes in the game loop.

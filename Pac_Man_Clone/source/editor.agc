@@ -1,4 +1,3 @@
-
 /*
 CONTRIBUTORS:
 	IronManhood
@@ -8,12 +7,9 @@ DATE:
 	
 PURPOSE:
 	
-
 DOCUMENTATION:
 	
-
 FUNCTIONS:
-	
 	
 EXAMPLE:
 
@@ -28,12 +24,7 @@ type t_Editor
 	map as t_Map
 endtype
 
-
 global editor as t_Editor
-
-
-
-
 
 function CreateEditorUI()
 	if editor.created = TRUE then exitfunction
@@ -42,8 +33,6 @@ function CreateEditorUI()
 	
 	CreateEditorMap(19, 22)
 endfunction
-
-
 
 function DeleteEditor()
 	editor.created = FALSE
@@ -55,9 +44,6 @@ function DeleteEditor()
 	next i
 	editor.map.tiles.length = -1
 endfunction
-
-
-
 
 function UpdateEditor()
 	DrawEditorMap(editor)
@@ -152,7 +138,6 @@ function UpdateEditor()
 	endif
 endfunction
 
-
 // Returns the tile index X the pointer is pointing at.
 function GetEditorGridX()
 	_ret = clamp_i(floor((GetPointerX() - editor.map.originPos.x) / editor.map.gridSize), 0, editor.map.width - 1)
@@ -162,9 +147,6 @@ endfunction _ret
 function GetEditorGridY()
 	_ret = clamp_i(floor((GetPointerY() - editor.map.originPos.y) / editor.map.gridSize), 0, editor.map.height - 1)
 endfunction _ret
-
-
-
 
 function CreateEditorMap(_w, _h)
 	editor.map.created = TRUE
@@ -192,7 +174,6 @@ function CreateEditorMap(_w, _h)
 	next i
 endfunction
 
-
 function UpdateResizedEditorMap()
 	if editor.map.created
 		editor.map.gridSize = min_f(resy(0.8) / editor.map.width, resy(0.9) / editor.map.height)
@@ -209,12 +190,6 @@ function UpdateResizedEditorMap()
 		next i
 	endif
 endfunction
-
-
-
-
-
-
 
 function DrawEditorMap(_e as t_Editor)
 	if _e.created
@@ -259,13 +234,3 @@ function DrawEditorMap(_e as t_Editor)
 		next i
 	endif
 endfunction
-
-
-
-
-
-
-
-
-
-
