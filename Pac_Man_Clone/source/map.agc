@@ -19,13 +19,14 @@ EXAMPLE:
 	
 */
 
-#constant TILETYPE_NULL		0 // No tile. Just black.
-#constant TILETYPE_WALL		1 // For blocking movement.
-#constant TILETYPE_PATH		2 // For movement.
-#constant TILETYPE_SPAWN		3 // For ghost block path. This allows ghost to move freely but not the player.
-#constant TILETYPE_WHITEWALL	4 // For ghost block wall.
-#constant TILETYPE_EXITPATH	5 // For exit path.
-#constant TILETYPE_NODOTPATH	6 // For paths with no dots.
+#constant TILETYPE_NULL			0 // No tile. Just black.
+#constant TILETYPE_WALL			1 // For blocking movement.
+#constant TILETYPE_PATH			2 // For movement.
+#constant TILETYPE_SPAWN			3 // For ghost block path. This allows ghost to move freely but not the player.
+#constant TILETYPE_WHITEWALL		4 // For ghost block wall.
+#constant TILETYPE_EXITPATH		5 // For exit path.
+#constant TILETYPE_NODOTPATH		6 // For paths with no dots.
+#constant TILETYPE_PLAYERSPAWN	7 // For player spawn.
 
 
 type t_Cell
@@ -106,7 +107,7 @@ function SaveMap(_fileName$, _map as t_Map)
 	
 	select _fileType$
 		case "csv":
-			f = OpenToWrite(_fileName$)
+			f = OpenToWrite("raw:" + mediaDirectory + "/" + _fileName$)
 			
 			for i = 0 to _map.tiles.length - 1
 				_line$ = ""
@@ -142,7 +143,7 @@ function SaveMap(_fileName$, _map as t_Map)
 			next i
 			
 			_ts$ = _jmap.toJson()
-			f = OpenToWrite(_fileName$)
+			f = OpenToWrite("raw:" + mediaDirectory + "/" + _fileName$)
 				WriteString(f, _ts$)
 			CloseFile(f)
 		endcase
@@ -280,6 +281,9 @@ function DrawAllTiles(_map as t_Map)
 					case TILETYPE_NODOTPATH:
 						DrawRange(_map.tiles[i,j].pos, _map.tiles[i,j].size, clr_darkgrey, clr_darkgrey, clr_darkgrey, clr_darkgrey, TRUE)
 					endcase
+					case TILETYPE_PLAYERSPAWN:
+						DrawRange(_map.tiles[i,j].pos, _map.tiles[i,j].size, clr_darkgrey, clr_darkgrey, clr_darkgrey, clr_darkgrey, TRUE)
+					endcase
 				endselect
 			next j
 		next i
@@ -323,6 +327,9 @@ function GetTileTypeString(_type)
 		endcase
 		case TILETYPE_NODOTPATH:
 			exitfunction "No Dot Path"
+		endcase
+		case TILETYPE_PLAYERSPAWN:
+			exitfunction "Player Spawn"
 		endcase
 	endselect
 endfunction "Null"

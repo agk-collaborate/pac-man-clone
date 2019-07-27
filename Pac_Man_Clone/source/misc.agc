@@ -171,5 +171,31 @@ endfunction _val2#
 
 
 
+// From AGK docs
+Function TextInput(textin$,length)
 
+    SetCursorBlinkTime(0.5)
+    SetTextInputMaxChars(length)
+    StartTextInput(textin$)
+
+    do
+        sync()
+        state=GetTextInputState()
+        c=GetLastChar()
+        if GetTextInputCompleted()
+            if GetTextInputCancelled()
+                text$=textin$
+                exit
+            else
+                text$=GetTextInput()
+                exit
+            endif
+        endif
+
+    loop
+
+    StopTextInput()
+    sync()
+
+endfunction text$
 

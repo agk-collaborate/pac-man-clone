@@ -61,6 +61,7 @@ endfunction
 
 function UpdateEditor()
 	DrawEditorMap(editor)
+	
 	Print("Press Up/Down arrow keys to change tile type.")
 	Print("Press Right/Left arrow keys to change file type.")
 	Print("Press Ctrl + S to save the map to file.")
@@ -68,42 +69,59 @@ function UpdateEditor()
 	Print("")
 	PrintC("Tile Type: ") : Print(GetTileTypeString(editor.currentType))
 	PrintC("filetype: ")
-	select editor.fileTypeSwitch
-		case 0:
-			Print("CSV")
-		endcase
-		case 1:
-			Print("JSON")
-		endcase
-	endselect
-	printc("grid index: [") : printc(GetEditorGridX()) : printc(", ") : printc(GetEditorGridY()) : print("]")
+	if editor.fileTypeSwitch then Print("JSON")
+	if not editor.fileTypeSwitch then Print("CSV")
 	
-
+	_xi = GetEditorGridX()
+	_yi = GetEditorGridY()
+	
+	printc("grid index: [") : printc(_yi) : printc(", ") : printc(_xi) : print("]")
+	
+	// Check if cursor is tile map bounds. If not, don't allow tile changing.
 	if inBounds(GetPointerX(), GetPointerY(), editor.map.originPos, vec2_MultNum1(vec2(editor.map.width, editor.map.height), editor.map.gridSize))
+		DrawRange(editor.map.tiles[_yi,_xi].pos, editor.map.tiles[_yi,_xi].size, clr_yellow, clr_yellow, clr_yellow, clr_yellow, FALSE)
 		if KEY_LMB_STATE
-			editor.map.tiles[GetEditorGridY(),GetEditorGridX()].tileType = editor.currentType
+			editor.map.tiles[_yi,_xi].tileType = editor.currentType
 		endif
 	endif
 	
-	if KEY_CONTROL_STATE
+	// No modifier keys pressed.
+	if not KEY_CONTROL_STATE and not KEY_SHIFT_STATE
+		if KEY_UP_PRESSED
+			dec editor.currentType
+			if editor.currentType < TILETYPE_NULL then editor.currentType = TILETYPE_PLAYERSPAWN
+		elseif KEY_DOWN_PRESSED
+			inc editor.currentType
+			if editor.currentType > TILETYPE_PLAYERSPAWN then editor.currentType = TILETYPE_NULL
+		endif
+		
+		if KEY_LEFT_PRESSED
+			editor.fileTypeSwitch = 0
+			
+		elseif KEY_RIGHT_PRESSED
+			editor.fileTypeSwitch = 1
+		endif
+	// Ctrl key pressed and not shift.
+	elseif KEY_CONTROL_STATE and not KEY_SHIFT_STATE
 		if KEY_S_PRESSED
+			_fName$ = TextInput("Map Name", 0)
 			select editor.fileTypeSwitch
 				case 0:
-					SaveMap("SavedMap.csv", editor.map)
+					SaveMap(_fName$ + ".csv", editor.map)
 				endcase
 				case 1:
-					SaveMap("SavedMap.json", editor.map)
+					SaveMap(_fName$ + ".json", editor.map)
 				endcase
 			endselect
 		endif
 		
 		if KEY_O_PRESSED
-			_file$ = ChooseRawFile("*.csv;*.json")
+			_file$ = ChooseRawFile("*.csv;*.json", TRUE)
 			if editor.map.created then Map_Delete(editor.map)
-			LoadMap(_file$, editor.map)
+			LoadMap("raw:" + _file$, editor.map)
 		endif
-		
-	elseif KEY_ALT_STATE
+	// Shift key pressed and not control.
+	elseif not KEY_CONTROL_STATE and KEY_SHIFT_STATE
 		if KEY_UP_PRESSED
 			editor.map.tiles.remove()
 			dec editor.map.height
@@ -131,24 +149,6 @@ function UpdateEditor()
 		endif
 		
 		if KEY_UP_PRESSED or KEY_DOWN_PRESSED or KEY_LEFT_PRESSED or KEY_RIGHT_PRESSED then UpdateResizedEditorMap()
-		
-	elseif KEY_SHIFT_STATE
-		
-	else
-		if KEY_UP_PRESSED
-			dec editor.currentType
-			if editor.currentType < TILETYPE_NULL then editor.currentType = TILETYPE_NODOTPATH
-		elseif KEY_DOWN_PRESSED
-			inc editor.currentType
-			if editor.currentType > TILETYPE_NODOTPATH then editor.currentType = TILETYPE_NULL
-		endif
-		
-		if KEY_LEFT_PRESSED
-			editor.fileTypeSwitch = 0
-			
-		elseif KEY_RIGHT_PRESSED
-			editor.fileTypeSwitch = 1
-		endif
 	endif
 endfunction
 
@@ -200,11 +200,6 @@ function UpdateResizedEditorMap()
 		editor.map.originPos.x = resx(0.5) - ((editor.map.gridSize * editor.map.width) * 0.5)
 		editor.map.originPos.y = resy(0.5) - ((editor.map.gridSize * editor.map.height) * 0.5)
 		
-//~		editor.map.tiles.length = editor.map.height
-//~		for i = 0 to editor.map.tiles.length - 1
-//~			editor.map.tiles[i].length = editor.map.width
-//~		next i
-		
 		for i = 0 to editor.map.tiles.length - 1
 			for j = 0 to editor.map.tiles[i].length - 1
 				editor.map.tiles[i,j].size = vec2(editor.map.gridSize, editor.map.gridSize)
@@ -247,6 +242,13 @@ function DrawEditorMap(_e as t_Editor)
 					case TILETYPE_NODOTPATH:
 						DrawRange(_e.map.tiles[i,j].pos, _e.map.tiles[i,j].size, clr_darkgrey, clr_darkgrey, clr_darkgrey, clr_darkgrey, TRUE)
 						vec2_DrawLine(_e.map.tiles[i,j].pos, vec2_Add(_e.map.tiles[i,j].pos, _e.map.tiles[i,j].size), clr_red, clr_red)
+					endcase
+					case TILETYPE_PLAYERSPAWN:
+						DrawRange(_e.map.tiles[i,j].pos, _e.map.tiles[i,j].size, clr_darkgrey, clr_darkgrey, clr_darkgrey, clr_darkgrey, TRUE)
+						_x# = _e.map.tiles[i,j].pos.x + (_e.map.tiles[i,j].size.x * 0.5)
+						vec2_DrawLine(vec2(_x#, _e.map.tiles[i,j].pos.y), vec2(_x#, _e.map.tiles[i,j].pos.y + _e.map.tiles[i,j].size.y), clr_lightblue, clr_lightblue)
+						_y# = _e.map.tiles[i,j].pos.y + (_e.map.tiles[i,j].size.y * 0.5)
+						vec2_DrawLine(vec2(_e.map.tiles[i,j].pos.x, _y#), vec2(_e.map.tiles[i,j].pos.x + _e.map.tiles[i,j].size.x, _y#), clr_lightblue, clr_lightblue)
 					endcase
 					
 					case default:

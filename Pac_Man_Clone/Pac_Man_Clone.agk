@@ -55,11 +55,11 @@ FILE_6=source%2Fmisc.agc;-1
 FILE_7=source%2Fpac%2Dman.agc;-1
 FILE_8=source%2Fvector2.agc;-1
 [files]
-FILE_NAME_0=1;source%2Feditor.agc;6;0
-FILE_NAME_1=0;main.agc;0;1
-FILE_NAME_2=0;source%2FmainMenu.agc;6;2
-FILE_NAME_3=0;source%2Fmap.agc;6;3
-FILE_NAME_4=0;source%2Fmisc.agc;7;4
+FILE_NAME_0=1;source%2Feditor.agc;99;0
+FILE_NAME_1=0;main.agc;26;1
+FILE_NAME_2=0;source%2FmainMenu.agc;33;2
+FILE_NAME_3=0;source%2Fmap.agc;113;3
+FILE_NAME_4=0;source%2Fmisc.agc;174;4
 FILE_NAME_5=0;source%2Fvector2.agc;7;5
 [watchvariables]
 [project]
