@@ -9,7 +9,8 @@ PURPOSE:
 	Pac-Man's positions and movement.
 
 DOCUMENTATION:
-	Direction: 0 (north) / 1 (west) / 2 (south) / 3 (est)
+
+	Direction: 0 (north) / 1 (west) / 2 (south) / 3 (east)
 	
 FUNCTIONS:
 	
