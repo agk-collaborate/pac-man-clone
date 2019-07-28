@@ -10,7 +10,8 @@ PURPOSE:
 
 DOCUMENTATION:
 	
-	Direction: 0 (north) / 1 (east) / 2 (south) / 3 (west)
+	Direction: 0 (north) / 1 (west) / 2 (south) / 3 (est)
+	Up > Left > Down > Right
 
 FUNCTIONS:
 	

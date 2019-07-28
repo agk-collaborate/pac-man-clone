@@ -9,6 +9,7 @@ PURPOSE:
 	Pac-Man's positions and movement.
 
 DOCUMENTATION:
+	Direction: 0 (north) / 1 (west) / 2 (south) / 3 (est)
 	
 FUNCTIONS:
 	
@@ -22,3 +23,29 @@ type pacman
 endtype
 
 global pacman as pacman
+
+function updatePacManDirection()
+	
+	if KEY_UP_STATE
+		
+		pacman.dir = 0
+		exitfunction
+		
+	elseif KEY_LEFT_STATE
+		
+		pacman.dir = 1
+		exitfunction
+	
+	elseif KEY_DOWN_STATE
+		
+		pacman.dir = 2
+		exitfunction
+	
+	elseif KEY_RIGHT_STATE
+		
+		pacman.dir = 3
+		exitfunction
+	
+	endif
+	
+endfunction
