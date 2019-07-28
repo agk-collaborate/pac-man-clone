@@ -115,7 +115,11 @@ function UpdateEditor()
 			
 		elseif KEY_DOWN_PRESSED
 			editor.map.tiles.length = editor.map.tiles.length + 1
-			editor.map.tiles[editor.map.tiles.length - 1].length = editor.map.width
+			_ind = editor.map.tiles.length - 1
+			editor.map.tiles[_ind].length = editor.map.width
+			for i = 0 to editor.map.tiles[_ind].length - 1
+				editor.map.tiles[_ind, i].tileType = editor.currentType
+			next i
 			inc editor.map.height
 		endif
 		
@@ -130,6 +134,7 @@ function UpdateEditor()
 			for i = 0 to editor.map.tiles.length - 1
 				_temp as t_Tile
 				editor.map.tiles[i].insert(_temp)
+				editor.map.tiles[i,editor.map.tiles[i].length - 1].tileType = editor.currentType
 			next i
 			inc editor.map.width
 		endif
@@ -138,12 +143,12 @@ function UpdateEditor()
 	endif
 endfunction
 
-// Returns the tile index X the pointer is pointing at.
+// Returns the X index of the tile the pointer is pointing at.
 function GetEditorGridX()
 	_ret = clamp_i(floor((GetPointerX() - editor.map.originPos.x) / editor.map.gridSize), 0, editor.map.width - 1)
 endfunction _ret
 
-// Returns the tile index Y the pointer is pointing at.
+// Returns the Y index of the tile the pointer is pointing at.
 function GetEditorGridY()
 	_ret = clamp_i(floor((GetPointerY() - editor.map.originPos.y) / editor.map.gridSize), 0, editor.map.height - 1)
 endfunction _ret
