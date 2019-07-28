@@ -49,3 +49,25 @@ function updatePacManDirection()
 	endif
 	
 endfunction
+
+function updatePacManPosition()
+	
+	if pacman.dir = 0
+		
+		pacman.pos.y =  pacman.pos.y - 1
+	
+	elseif pacman.dir = 1
+		
+		pacman.pos.x = pacman.pos.x - 1
+	
+	elseif pacman.dir = 2
+		
+		pacman.pos.y = pacman.pos.y + 1
+		
+	elseif pacman.dir = 3
+		
+		pacman.pos.x = pacman.pos.x + 1
+	
+	endif
+	
+endfunction
