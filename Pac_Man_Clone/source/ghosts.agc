@@ -10,10 +10,18 @@ PURPOSE:
 
 DOCUMENTATION:
 	
-	Direction: 0 (north) / 1 (east) / 2 (south) / 3 (west)
+	Direction: 0 (north) / 1 (west) / 2 (south) / 3 (est)
+	Up > Left > Down > Right
 
 FUNCTIONS:
 	
+	void <-- updateScatterHomes()
+	
+	void <-- updateGhostTarget()
+	
+	void <-- updateGhostDirection()
+	
+	void <-- updateGhostPosition()
 	
 EXAMPLE:
 
@@ -109,4 +117,87 @@ function updateGhostTarget()
 		ghostC.target.Y = CscatterHome.Y
 	endif
 	
+endfunction
+
+function updateGhostDirection()
+	
+endfunction
+
+function updateGhostPosition()
+	
+	//Blinky
+	if ghostB.dir = 0
+		
+		ghostB.pos.y =  ghostB.pos.y - 1
+	
+	elseif ghostB.dir = 1
+		
+		ghostB.pos.x = ghostB.pos.x - 1
+	
+	elseif ghostB.dir = 2
+		
+		ghostB.pos.y = ghostB.pos.y + 1
+		
+	elseif ghostB.dir = 3
+		
+		ghostB.pos.x = ghostB.pos.x + 1
+	
+	endif
+	
+	//Pinky
+	if ghostP.dir = 0
+		
+		ghostP.pos.y =  ghostP.pos.y - 1
+	
+	elseif ghostP.dir = 1
+		
+		ghostP.pos.x = ghostP.pos.x - 1
+	
+	elseif ghostP.dir = 2
+		
+		ghostP.pos.y = ghostP.pos.y + 1
+		
+	elseif ghostP.dir = 3
+		
+		ghostP.pos.x = ghostP.pos.x + 1
+	
+	endif
+	
+	//Inky
+	if ghostI.dir = 0
+		
+		ghostI.pos.y =  ghostI.pos.y - 1
+	
+	elseif ghostI.dir = 1
+		
+		ghostI.pos.x = ghostI.pos.x - 1
+	
+	elseif ghostI.dir = 2
+		
+		ghostI.pos.y = ghostI.pos.y + 1
+		
+	elseif ghostI.dir = 3
+		
+		ghostI.pos.x = ghostI.pos.x + 1
+	
+	endif
+	
+	//Clyde
+	if ghostC.dir = 0
+		
+		ghostC.pos.y =  ghostC.pos.y - 1
+	
+	elseif ghostC.dir = 1
+		
+		ghostC.pos.x = ghostC.pos.x - 1
+	
+	elseif ghostC.dir = 2
+		
+		ghostC.pos.y = ghostC.pos.y + 1
+		
+	elseif ghostC.dir = 3
+		
+		ghostC.pos.x = ghostC.pos.x + 1
+	
+	endif
 endfunction
