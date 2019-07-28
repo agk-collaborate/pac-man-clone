@@ -13,6 +13,10 @@ DOCUMENTATION:
 	
 FUNCTIONS:
 	
+	void <-- updatePacManDirection()
+	
+	void <-- updatePacManPosition()
+	
 EXAMPLE:
 
 */
