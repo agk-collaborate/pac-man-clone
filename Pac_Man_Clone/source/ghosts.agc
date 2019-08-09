@@ -29,12 +29,14 @@ EXAMPLE:
 
 type Ghost
 	pos as t_Vector_2			//Ghost's position (x and y)
+	size as t_Vector_2			// Ghosts' size (width & height)
 	target as t_Vector_2		//Ghost's target's position (x and y)
 	targetHelp as t_Vector_2	//Help for the "misalignment" of the target (Y)
 	dir as integer				//Ghost's facing direction
 	house as integer			//If ghost is in the Ghost House or not
 	state as integer			//0 (eaten) / 1 (chase) / 2 (scatter) / 3 (frightened)
 	distToPac as integer		//Ghost's distance to Pac-Man
+	created as integer			// Will skip update calls if not created.
 endtype
 
 global ghostB as Ghost
@@ -126,78 +128,97 @@ endfunction
 function updateGhostPosition()
 	
 	//Blinky
-	if ghostB.dir = 0
+	if ghostB.created = 1
+		if ghostB.dir = 0
+			
+			ghostB.pos.y =  ghostB.pos.y - 1
 		
-		ghostB.pos.y =  ghostB.pos.y - 1
-	
-	elseif ghostB.dir = 1
+		elseif ghostB.dir = 1
+			
+			ghostB.pos.x = ghostB.pos.x - 1
 		
-		ghostB.pos.x = ghostB.pos.x - 1
-	
-	elseif ghostB.dir = 2
+		elseif ghostB.dir = 2
+			
+			ghostB.pos.y = ghostB.pos.y + 1
+			
+		elseif ghostB.dir = 3
+			
+			ghostB.pos.x = ghostB.pos.x + 1
 		
-		ghostB.pos.y = ghostB.pos.y + 1
-		
-	elseif ghostB.dir = 3
-		
-		ghostB.pos.x = ghostB.pos.x + 1
-	
+		endif
+		vec2_DrawEllipse(ghostB.pos, ghostB.size, clr_red, clr_red, TRUE)
 	endif
 	
 	//Pinky
-	if ghostP.dir = 0
+	if ghostP.created = 1
+		if ghostP.dir = 0
+			
+			ghostP.pos.y =  ghostP.pos.y - 1
 		
-		ghostP.pos.y =  ghostP.pos.y - 1
-	
-	elseif ghostP.dir = 1
+		elseif ghostP.dir = 1
+			
+			ghostP.pos.x = ghostP.pos.x - 1
 		
-		ghostP.pos.x = ghostP.pos.x - 1
-	
-	elseif ghostP.dir = 2
+		elseif ghostP.dir = 2
+			
+			ghostP.pos.y = ghostP.pos.y + 1
+			
+		elseif ghostP.dir = 3
+			
+			ghostP.pos.x = ghostP.pos.x + 1
 		
-		ghostP.pos.y = ghostP.pos.y + 1
-		
-	elseif ghostP.dir = 3
-		
-		ghostP.pos.x = ghostP.pos.x + 1
-	
+		endif
+		vec2_DrawEllipse(ghostP.pos, ghostP.size, clr_pink, clr_pink, TRUE)
 	endif
 	
 	//Inky
-	if ghostI.dir = 0
+	if ghostI.created = 1
+		if ghostI.dir = 0
+			
+			ghostI.pos.y =  ghostI.pos.y - 1
 		
-		ghostI.pos.y =  ghostI.pos.y - 1
-	
-	elseif ghostI.dir = 1
+		elseif ghostI.dir = 1
+			
+			ghostI.pos.x = ghostI.pos.x - 1
 		
-		ghostI.pos.x = ghostI.pos.x - 1
-	
-	elseif ghostI.dir = 2
+		elseif ghostI.dir = 2
+			
+			ghostI.pos.y = ghostI.pos.y + 1
+			
+		elseif ghostI.dir = 3
+			
+			ghostI.pos.x = ghostI.pos.x + 1
 		
-		ghostI.pos.y = ghostI.pos.y + 1
-		
-	elseif ghostI.dir = 3
-		
-		ghostI.pos.x = ghostI.pos.x + 1
-	
+		endif
+		vec2_DrawEllipse(ghostI.pos, ghostI.size, clr_cyan, clr_cyan, TRUE)
 	endif
 	
 	//Clyde
-	if ghostC.dir = 0
+	if ghostC.created = 1
+		if ghostC.dir = 0
+			
+			ghostC.pos.y =  ghostC.pos.y - 1
 		
-		ghostC.pos.y =  ghostC.pos.y - 1
-	
-	elseif ghostC.dir = 1
+		elseif ghostC.dir = 1
+			
+			ghostC.pos.x = ghostC.pos.x - 1
 		
-		ghostC.pos.x = ghostC.pos.x - 1
-	
-	elseif ghostC.dir = 2
+		elseif ghostC.dir = 2
+			
+			ghostC.pos.y = ghostC.pos.y + 1
+			
+		elseif ghostC.dir = 3
+			
+			ghostC.pos.x = ghostC.pos.x + 1
 		
-		ghostC.pos.y = ghostC.pos.y + 1
-		
-	elseif ghostC.dir = 3
-		
-		ghostC.pos.x = ghostC.pos.x + 1
-	
+		endif
+		vec2_DrawEllipse(ghostC.pos, ghostC.size, clr_orange, clr_orange, TRUE)
+	endif
+endfunction
+
+function UpdateGhosts(ghostB ref as Ghost, ghostP ref as Ghost, ghostI ref as Ghost, ghostC ref as Ghost)
+	if ghostB.created OR ghostP.created OR ghostI.created OR ghostC.created
+		updateGhostDirection()
+		updateGhostPosition()
 	endif
 endfunction
