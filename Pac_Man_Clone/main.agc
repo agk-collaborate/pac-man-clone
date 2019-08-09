@@ -9,6 +9,7 @@
 #include "source/pac-man.agc"
 #include "source/keys.agc"
 #include "source/editor.agc"
+#include "source/game.agc"
 
 #constant APPSTATE_MAINMENU	0
 #constant APPSTATE_GAME		1
@@ -91,9 +92,9 @@ function UpdateApp(state)
 			endif
 		endcase
 		case APPSTATE_GAME:
-			DrawAllTiles(map)
+			UpdateGame(game)
 			if GetRawKeyPressed(27) // Escape
-				Map_Delete(map)
+				DeleteGame(game)
 				MainMenu_Show()
 				AppState = APPSTATE_MAINMENU
 			endif

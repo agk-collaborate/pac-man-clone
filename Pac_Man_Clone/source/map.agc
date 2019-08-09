@@ -19,10 +19,10 @@ EXAMPLE:
 #constant TILETYPE_NULL			0 // No tile. Just black.
 #constant TILETYPE_WALL			1 // For blocking movement.
 #constant TILETYPE_PATH			2 // For movement.
-#constant TILETYPE_SPAWN		3 // For ghost block path. This allows ghost to move freely but not the player.
-#constant TILETYPE_WHITEWALL	4 // For ghost block wall.
+#constant TILETYPE_SPAWN			3 // For ghost block path. This allows ghost to move freely but not the player.
+#constant TILETYPE_WHITEWALL		4 // For ghost block wall.
 #constant TILETYPE_EXITPATH		5 // For exit path.
-#constant TILETYPE_NODOTPATH	6 // For paths with no dots.
+#constant TILETYPE_NODOTPATH		6 // For paths with no dots.
 #constant TILETYPE_PLAYERSPAWN	7 // For player spawn.
 
 type t_Cell
@@ -68,7 +68,7 @@ type t_Map
 	tiles as t_Tile[-1,-1]
 endtype
 
-global map as t_Map
+//~global map as t_Map
 
 function Map_Delete(_map ref as t_Map)
 	for i = 0 to _map.tiles.length - 1
@@ -266,6 +266,22 @@ function DrawAllTiles(_map as t_Map)
 		next i
 	endif
 endfunction
+
+// Returns the first encountered player spawn tile's center position.
+function GetPMSpawnPosition(_map as t_Map)
+	if _map.created
+		_v as t_Vector_2
+		for i = 0 to _map.tiles.length - 1
+			for j = 0 to _map.tiles[i].length - 1
+				if _map.tiles[i,j].tileType = TILETYPE_PLAYERSPAWN
+					_v = vec2_Add(_map.tiles[i,j].pos, vec2_DivNum1(_map.tiles[i,j].size, 2.0))
+					exitfunction _v
+				endif
+			next j
+		next i
+	endif
+endfunction _v
+
 
 // Prints the tiles in map formation.
 function PrintAllTiles(_map as t_Map)
