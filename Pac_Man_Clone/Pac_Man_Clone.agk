@@ -43,7 +43,7 @@ prov_profile_path=
 [html5_settings]
 commands_used=0
 dynamic_memory=0
-output_path=E:\\Roba Specky\\AGK\\Collab Projects\\pac-man-clone\\Pac_Man_Clone\\HTML5
+output_path=
 
 [projectfiles]
 FILE_0=source%2Feditor.agc;-1
@@ -65,7 +65,6 @@ FILE_NAME_3=0;source%2Fmap.agc;70;3
 FILE_NAME_4=1;source%2Fpac%2Dman.agc;38;4
 FILE_NAME_5=0;source%2Fvector2.agc;183;5
 FILE_NAME_6=0;source%2Fgame.agc;36;6
-FILE_NAME_7=0;source%2Fvector2.agc;7;4
 
 [watchvariables]
 
