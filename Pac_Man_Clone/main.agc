@@ -55,6 +55,9 @@ global clr_darkgrey as integer
 global clr_violet as integer
 global clr_tan as integer
 global clr_yellow as integer
+global clr_pink as integer
+global clr_cyan as integer
+global clr_orange as integer
 clr_white = MakeColor(255, 255, 255)
 clr_red = MakeColor(255, 0, 0)
 clr_green = MakeColor(0, 255, 0)
@@ -65,6 +68,9 @@ clr_darkgrey = MakeColor(31, 31, 31)
 clr_violet = MakeColor(225, 190, 225)
 clr_tan = MakeColor(255,224,189)
 clr_yellow = MakeColor(255,255,0)
+clr_pink = MakeColor(255,20,147)
+clr_cyan = MakeColor(0,255,255)
+clr_orange = MakeColor(255, 128, 0)
 
 MainMenu_Create()
 
