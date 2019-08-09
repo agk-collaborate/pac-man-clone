@@ -1,9 +1,10 @@
 /*
 CONTRIBUTORS:
 	SpeckyYT
+	IronManhood
 	
 DATE:
-	last updated 07/19/2019 by SpeckyYT
+	last updated 08/09/2019 by IronManhood
 	
 PURPOSE:
 	The ghost's AI and other stuff.
@@ -65,55 +66,55 @@ function updateScatterHomes()
 
 endfunction
 
-function updateGhostTarget()
+function updateGhostTarget(_pm as pacman)
 	
 	updateScatterHomes()
 	
 	//Blinky
-	ghostB.target.x = pacman.pos.x
-	ghostP.target.y = pacman.pos.y
+	ghostB.target.x = _pm.pos.x
+	ghostP.target.y = _pm.pos.y
 		
 	//Pinky
-	if pacman.dir = 0
+	if _pm.dir = 0
 		ghostP.targetHelp.X = -4
 		ghostP.targetHelp.Y = -4
-	elseif pacman.dir = 1
+	elseif _pm.dir = 1
 		ghostP.targetHelp.X = 4
 		ghostP.targetHelp.Y = 0
-	elseif pacman.dir = 2
+	elseif _pm.dir = 2
 		ghostP.targetHelp.X = 0
 		ghostP.targetHelp.Y = 4
-	elseif pacman.dir = 3
+	elseif _pm.dir = 3
 		ghostP.targetHelp.X = -4
 		ghostP.targetHelp.Y = 0
 	endif
 	
-	ghostP.target.X = pacman.pos.X + ghostP.targetHelp.X
-	ghostP.target.Y = pacman.pos.Y + ghostP.targetHelp.Y
+	ghostP.target.X = _pm.pos.X + ghostP.targetHelp.X
+	ghostP.target.Y = _pm.pos.Y + ghostP.targetHelp.Y
 	
 	//Inky
-	if pacman.dir = 0
+	if _pm.dir = 0
 		ghostI.targetHelp.X = -2
 		ghostI.targetHelp.Y = -2
-	elseif pacman.dir = 1
+	elseif _pm.dir = 1
 		ghostI.targetHelp.X = 2
 		ghostI.targetHelp.Y = 0
-	elseif pacman.dir = 2
+	elseif _pm.dir = 2
 		ghostI.targetHelp.X = 0
 		ghostI.targetHelp.Y = 2
-	elseif pacman.dir = 3
+	elseif _pm.dir = 3
 		ghostI.targetHelp.X = -2
 		ghostI.targetHelp.Y = 0
 	endif
 	
-	ghostI.targetHelp.X = pacman.pos.X + ghostI.targetHelp.X - ghostB.pos.X
-	ghostI.targetHelp.Y = pacman.pos.Y + ghostI.targetHelp.Y - ghostB.pos.Y
+	ghostI.targetHelp.X = _pm.pos.X + ghostI.targetHelp.X - ghostB.pos.X
+	ghostI.targetHelp.Y = _pm.pos.Y + ghostI.targetHelp.Y - ghostB.pos.Y
 	
 	//Clyde
-	ghostC.distToPac = vec2_Distance(ghostC.pos, pacman.pos)
+	ghostC.distToPac = vec2_Distance(ghostC.pos, _pm.pos)
 	if  ghostC.distToPac > 8
-		ghostC.target.X = pacman.pos.X
-		ghostC.target.Y = pacman.pos.Y
+		ghostC.target.X = _pm.pos.X
+		ghostC.target.Y = _pm.pos.Y
 	else
 		ghostC.target.X = CscatterHome.X
 		ghostC.target.Y = CscatterHome.Y

@@ -16,7 +16,6 @@ global AppState as integer = 0
 global mediaDirectory as string
 mediaDirectory = GetReadPath() + "media"
 
-
 //global clr_white as integer
 //global clr_red as integer
 //global clr_green as integer
@@ -43,4 +42,3 @@ mediaDirectory = GetReadPath() + "media"
 //clr_pink = MakeColor(255,20,147)
 //clr_cyan = MakeColor(0,255,255)
 //clr_orange = MakeColor(255, 128, 0)
-

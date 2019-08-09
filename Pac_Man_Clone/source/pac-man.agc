@@ -15,11 +15,15 @@ DOCUMENTATION:
 	
 FUNCTIONS:
 	
-	void <-- CreatePacMan()
+	void <-- CreatePacMan(_pm ref as pacman, _map as t_Map)
 	
-	void <-- updatePacManDirection()
+	void <-- DeletePacMan(_pm ref as pacman)
 	
-	void <-- updatePacManPosition()
+	void <-- updatePacManDirection(_pm ref as pacman)
+	
+	void <-- updatePacManPosition(_pm ref as pacman)
+	
+	void <-- UpdatePacman(_pm ref as pacman)
 	
 EXAMPLE:
 
@@ -29,16 +33,19 @@ type pacman
 	pos as	t_Vector_2			//Pac-Man's position (x and y)
 	size as t_Vector_2			// Pac-Man's size (width & height)
 	dir as integer					//Pac-Man's facing direction
+	speed as float
 	
 	created as integer			// Will skip update calls if not created.
 endtype
 
-global pacman as pacman
+//~global pacman as pacman
 
 
 function CreatePacMan(_pm ref as pacman, _map as t_Map)
 	if not _pm.created
 		_pm.created = TRUE
+		_pm.dir = -1
+		_pm.speed = 100.0
 		_pm.pos = GetPMSpawnPosition(_map)
 		_pm.size = vec2_1(_map.gridSize * 0.45)
 	endif
@@ -79,32 +86,84 @@ function updatePacManDirection(_pm ref as pacman)
 		
 endfunction
 
-function updatePacManPosition(_pm ref as pacman)
+function updatePacManPosition(_pm ref as pacman, _map ref as t_Map)
+		_ix = GetTileIndexX(_map, _pm.pos.x)
+		_iy = GetTileIndexY(_map, _pm.pos.y)
+		_tc as t_Vector_2
+		_tc = GetTileCenterPos(_map, _iy, _ix)
+		
+		// For debugging.
+		DrawRange(_map.tiles[_iy,_ix].pos, _map.tiles[_iy,_ix].size, clr_cyan, clr_cyan, clr_cyan, clr_cyan, FALSE)
+		vec2_DrawEllipse(_tc, vec2_1(4.0), clr_pink, clr_pink, TRUE)
 	
-		if _pm.dir = 0
+		if _pm.dir = 0 // (north)
+
+			dec _pm.pos.y, _pm.speed * GetFrameTime() // Scale by frametime to account for variable frame rate.
 			
-			_pm.pos.y =  _pm.pos.y - 1
+			// Check for wall collision.
+			if _pm.pos.y <= _tc.y
+				if _iy - 1 < 0
+					
+				elseif _map.tiles[_iy - 1,_ix].tileType = TILETYPE_WALL
+					_pm.pos.y = _tc.y
+					_pm.dir = -1
+					DrawRange(_map.tiles[_iy - 1,_ix].pos, _map.tiles[_iy,_ix].size, clr_red, clr_red, clr_red, clr_red, TRUE) // For debugging.
+				endif
+			endif
 		
-		elseif _pm.dir = 1
+		elseif _pm.dir = 1 // (west)
+
+			dec _pm.pos.x, _pm.speed * GetFrameTime() // Scale by frametime to account for variable frame rate.
 			
-			_pm.pos.x = _pm.pos.x - 1
+			// Check for wall collision.
+			if _pm.pos.x <= _tc.x
+				if _ix - 1 < 0
+					
+				elseif _map.tiles[_iy,_ix - 1].tileType = TILETYPE_WALL
+					_pm.pos.x = _tc.x
+					_pm.dir = -1
+					DrawRange(_map.tiles[_iy,_ix - 1].pos, _map.tiles[_iy,_ix].size, clr_red, clr_red, clr_red, clr_red, TRUE) // For debugging.
+				endif
+			endif
 		
-		elseif _pm.dir = 2
+		elseif _pm.dir = 2 // (south)
+
+			inc _pm.pos.y, _pm.speed * GetFrameTime() // Scale by frametime to account for variable frame rate.
 			
-			_pm.pos.y = _pm.pos.y + 1
+			// Check for wall collision.
+			if _pm.pos.y >= _tc.y
+				if _iy + 1 > _map.tiles.length - 1
+					
+				elseif _map.tiles[_iy + 1,_ix].tileType = TILETYPE_WALL
+					_pm.pos.y = _tc.y
+					_pm.dir = -1
+					DrawRange(_map.tiles[_iy + 1,_ix].pos, _map.tiles[_iy,_ix].size, clr_red, clr_red, clr_red, clr_red, TRUE) // For debugging.
+				endif
+			endif
 			
-		elseif _pm.dir = 3
+		elseif _pm.dir = 3 // (east)
+
+			inc _pm.pos.x, _pm.speed * GetFrameTime() // Scale by frametime to account for variable frame rate.
 			
-			_pm.pos.x = _pm.pos.x + 1
+			// Check for wall collision.
+			if _pm.pos.x >= _tc.x
+				if _ix + 1 > _map.tiles[0].length - 1
+					
+				elseif _map.tiles[_iy,_ix + 1].tileType = TILETYPE_WALL
+					_pm.pos.x = _tc.x
+					_pm.dir = -1
+					DrawRange(_map.tiles[_iy,_ix + 1].pos, _map.tiles[_iy,_ix].size, clr_red, clr_red, clr_red, clr_red, TRUE) // For debugging.
+				endif
+			endif
 		
 		endif
 		
 endfunction
 
-function UpdatePacman(_pm ref as pacman)
+function UpdatePacman(_pm ref as pacman, _map ref as t_Map)
 	if _pm.created
 		updatePacManDirection(_pm)
-		updatePacManPosition(_pm)
+		updatePacManPosition(_pm, _map)
 		vec2_DrawEllipse(_pm.pos, _pm.size, clr_yellow, clr_yellow, TRUE)
 	endif
 endfunction

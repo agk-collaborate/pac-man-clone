@@ -274,13 +274,38 @@ function GetPMSpawnPosition(_map as t_Map)
 		for i = 0 to _map.tiles.length - 1
 			for j = 0 to _map.tiles[i].length - 1
 				if _map.tiles[i,j].tileType = TILETYPE_PLAYERSPAWN
-					_v = vec2_Add(_map.tiles[i,j].pos, vec2_DivNum1(_map.tiles[i,j].size, 2.0))
+					_v = GetTileCenterPos(_map, i, j)
 					exitfunction _v
 				endif
 			next j
 		next i
 	endif
 endfunction _v
+
+
+
+// Returns the X index of the tile the x parameter is within.
+function GetTileIndexX(_map ref as t_Map, _x#)
+	_ret = clamp_i(floor((_x# - _map.originPos.x) / _map.gridSize), 0, _map.width - 1)
+endfunction _ret
+
+// Returns the Y index of the tile the y parameter is within.
+function GetTileIndexY(_map ref as t_Map, _y#)
+	_ret = clamp_i(floor((_y# - _map.originPos.y) / _map.gridSize), 0, _map.height - 1)
+endfunction _ret
+
+
+
+// Return the center position of the tile.
+function GetTileCenterPos(_map ref as t_Map, _ix, _iy)
+	_v as t_Vector_2
+	_v = vec2_Add(_map.tiles[_ix,_iy].pos, vec2_MultNum1(_map.tiles[_ix,_iy].size, 0.5))
+endfunction _v
+
+
+
+
+
 
 
 // Prints the tiles in map formation.

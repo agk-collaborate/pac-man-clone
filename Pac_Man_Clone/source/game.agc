@@ -52,5 +52,5 @@ endfunction
 
 function UpdateGame(_g ref as t_Game)
 	DrawAllTiles(_g.map)
-	UpdatePacman(_g.pm)
+	UpdatePacman(_g.pm, _g.map)
 endfunction
