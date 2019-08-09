@@ -117,7 +117,8 @@ function MainMenu_Update()
 				if GetPointerPressed()
 					MainMenu_Hide()
 //~					LoadMap("map.csv", map)
-					LoadMap("map.json", map)
+//~					LoadMap("map.json", map)
+					CreateGame(game)
 					AppState = APPSTATE_GAME
 				endif
 			else

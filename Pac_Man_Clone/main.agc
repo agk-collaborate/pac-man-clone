@@ -98,9 +98,9 @@ function UpdateApp(state)
 			endif
 		endcase
 		case APPSTATE_GAME:
-			DrawAllTiles(map)
+			UpdateGame(game)
 			if GetRawKeyPressed(27) // Escape
-				Map_Delete(map)
+				DeleteGame(game)
 				MainMenu_Show()
 				AppState = APPSTATE_MAINMENU
 			endif
