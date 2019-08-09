@@ -1,6 +1,13 @@
 // Project: Pac_Man_Clone
 // Created: 19-07-18
 
+<<<<<<< Updated upstream
+=======
+// Initialize globals.
+#insert "inserts/globals.agc"
+#insert "inserts/colors.agc"
+
+>>>>>>> Stashed changes
 #include "source/misc.agc"
 #include "source/vector2.agc"
 #include "source/mainMenu.agc"

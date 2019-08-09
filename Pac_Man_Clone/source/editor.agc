@@ -202,33 +202,33 @@ function DrawEditorMap(_e as t_Editor)
 			for j = 0 to _e.map.tiles[i].length - 1
 				select _e.map.tiles[i,j].tileType
 					case TILETYPE_WALL:
-						DrawRange(_e.map.tiles[i,j].pos, _e.map.tiles[i,j].size, clr_lightblue, clr_lightblue, clr_lightblue, clr_lightblue, TRUE)
+						DrawRange(_e.map.tiles[i,j].pos, _e.map.tiles[i,j].size, clr_light_blue, clr_light_blue, clr_light_blue, clr_light_blue, TRUE)
 						DrawRange(_e.map.tiles[i,j].pos, _e.map.tiles[i,j].size, clr_violet, clr_violet, clr_violet, clr_violet, FALSE)
 					endcase
 					case TILETYPE_PATH:
-						DrawRange(_e.map.tiles[i,j].pos, _e.map.tiles[i,j].size, clr_darkgrey, clr_darkgrey, clr_darkgrey, clr_darkgrey, TRUE)
+						DrawRange(_e.map.tiles[i,j].pos, _e.map.tiles[i,j].size, clr_dark_grey, clr_dark_grey, clr_dark_grey, clr_dark_grey, TRUE)
 					endcase
 					case TILETYPE_SPAWN:
 						DrawRange(_e.map.tiles[i,j].pos, _e.map.tiles[i,j].size, clr_white, clr_white, clr_white, clr_white, TRUE)
 					endcase
 					case TILETYPE_WHITEWALL:
-						DrawRange(_e.map.tiles[i,j].pos, _e.map.tiles[i,j].size, clr_lightgrey, clr_lightgrey, clr_lightgrey, clr_lightgrey, TRUE)
+						DrawRange(_e.map.tiles[i,j].pos, _e.map.tiles[i,j].size, clr_light_grey, clr_light_grey, clr_light_grey, clr_light_grey, TRUE)
 					endcase
 					case TILETYPE_EXITPATH:
-						DrawRange(_e.map.tiles[i,j].pos, _e.map.tiles[i,j].size, clr_darkgrey, clr_darkgrey, clr_darkgrey, clr_darkgrey, TRUE)
+						DrawRange(_e.map.tiles[i,j].pos, _e.map.tiles[i,j].size, clr_dark_grey, clr_dark_grey, clr_dark_grey, clr_dark_grey, TRUE)
 						vec2_DrawLine(vec2(_e.map.tiles[i,j].pos.x, _e.map.tiles[i,j].pos.y + (_e.map.tiles[i,j].size.x * 0.5)), vec2(_e.map.tiles[i,j].pos.x + _e.map.tiles[i,j].size.x, _e.map.tiles[i,j].pos.y), clr_green, clr_green)
 						vec2_DrawLine(vec2(_e.map.tiles[i,j].pos.x, _e.map.tiles[i,j].pos.y + (_e.map.tiles[i,j].size.x * 0.5)), vec2_Add(_e.map.tiles[i,j].pos, _e.map.tiles[i,j].size), clr_green, clr_green)
 					endcase
 					case TILETYPE_NODOTPATH:
-						DrawRange(_e.map.tiles[i,j].pos, _e.map.tiles[i,j].size, clr_darkgrey, clr_darkgrey, clr_darkgrey, clr_darkgrey, TRUE)
+						DrawRange(_e.map.tiles[i,j].pos, _e.map.tiles[i,j].size, clr_dark_grey, clr_dark_grey, clr_dark_grey, clr_dark_grey, TRUE)
 						vec2_DrawLine(_e.map.tiles[i,j].pos, vec2_Add(_e.map.tiles[i,j].pos, _e.map.tiles[i,j].size), clr_red, clr_red)
 					endcase
 					case TILETYPE_PLAYERSPAWN:
-						DrawRange(_e.map.tiles[i,j].pos, _e.map.tiles[i,j].size, clr_darkgrey, clr_darkgrey, clr_darkgrey, clr_darkgrey, TRUE)
+						DrawRange(_e.map.tiles[i,j].pos, _e.map.tiles[i,j].size, clr_dark_grey, clr_dark_grey, clr_dark_grey, clr_dark_grey, TRUE)
 						_x# = _e.map.tiles[i,j].pos.x + (_e.map.tiles[i,j].size.x * 0.5)
-						vec2_DrawLine(vec2(_x#, _e.map.tiles[i,j].pos.y), vec2(_x#, _e.map.tiles[i,j].pos.y + _e.map.tiles[i,j].size.y), clr_lightblue, clr_lightblue)
+						vec2_DrawLine(vec2(_x#, _e.map.tiles[i,j].pos.y), vec2(_x#, _e.map.tiles[i,j].pos.y + _e.map.tiles[i,j].size.y), clr_light_blue, clr_light_blue)
 						_y# = _e.map.tiles[i,j].pos.y + (_e.map.tiles[i,j].size.y * 0.5)
-						vec2_DrawLine(vec2(_e.map.tiles[i,j].pos.x, _y#), vec2(_e.map.tiles[i,j].pos.x + _e.map.tiles[i,j].size.x, _y#), clr_lightblue, clr_lightblue)
+						vec2_DrawLine(vec2(_e.map.tiles[i,j].pos.x, _y#), vec2(_e.map.tiles[i,j].pos.x + _e.map.tiles[i,j].size.x, _y#), clr_light_blue, clr_light_blue)
 					endcase
 					
 					case default:

@@ -237,11 +237,11 @@ function DrawAllTiles(_map as t_Map)
 			for j = 0 to _map.tiles[i].length - 1
 				select _map.tiles[i,j].tileType
 					case TILETYPE_WALL:
-						DrawRange(_map.tiles[i,j].pos, _map.tiles[i,j].size, clr_lightblue, clr_lightblue, clr_lightblue, clr_lightblue, TRUE)
+						DrawRange(_map.tiles[i,j].pos, _map.tiles[i,j].size, clr_light_blue, clr_light_blue, clr_light_blue, clr_light_blue, TRUE)
 						DrawRange(_map.tiles[i,j].pos, _map.tiles[i,j].size, clr_violet, clr_violet, clr_violet, clr_violet, FALSE)
 					endcase
 					case TILETYPE_PATH:
-						DrawRange(_map.tiles[i,j].pos, _map.tiles[i,j].size, clr_darkgrey, clr_darkgrey, clr_darkgrey, clr_darkgrey, TRUE)
+						DrawRange(_map.tiles[i,j].pos, _map.tiles[i,j].size, clr_dark_grey, clr_dark_grey, clr_dark_grey, clr_dark_grey, TRUE)
 						if _map.tiles[i,j].dot.created and _map.tiles[i,j].dot.active
 							vec2_DrawEllipse(_map.tiles[i,j].dot.pos, vec2_1(_map.tiles[i,j].dot.size), clr_tan, clr_tan, TRUE)
 						endif
@@ -250,16 +250,16 @@ function DrawAllTiles(_map as t_Map)
 						DrawRange(_map.tiles[i,j].pos, _map.tiles[i,j].size, clr_white, clr_white, clr_white, clr_white, TRUE)
 					endcase
 					case TILETYPE_WHITEWALL:
-						DrawRange(_map.tiles[i,j].pos, _map.tiles[i,j].size, clr_lightgrey, clr_lightgrey, clr_lightgrey, clr_lightgrey, TRUE)
+						DrawRange(_map.tiles[i,j].pos, _map.tiles[i,j].size, clr_light_grey, clr_light_grey, clr_light_grey, clr_light_grey, TRUE)
 					endcase
 					case TILETYPE_EXITPATH:
-						DrawRange(_map.tiles[i,j].pos, _map.tiles[i,j].size, clr_darkgrey, clr_darkgrey, clr_darkgrey, clr_darkgrey, TRUE)
+						DrawRange(_map.tiles[i,j].pos, _map.tiles[i,j].size, clr_dark_grey, clr_dark_grey, clr_dark_grey, clr_dark_grey, TRUE)
 					endcase
 					case TILETYPE_NODOTPATH:
-						DrawRange(_map.tiles[i,j].pos, _map.tiles[i,j].size, clr_darkgrey, clr_darkgrey, clr_darkgrey, clr_darkgrey, TRUE)
+						DrawRange(_map.tiles[i,j].pos, _map.tiles[i,j].size, clr_dark_grey, clr_dark_grey, clr_dark_grey, clr_dark_grey, TRUE)
 					endcase
 					case TILETYPE_PLAYERSPAWN:
-						DrawRange(_map.tiles[i,j].pos, _map.tiles[i,j].size, clr_darkgrey, clr_darkgrey, clr_darkgrey, clr_darkgrey, TRUE)
+						DrawRange(_map.tiles[i,j].pos, _map.tiles[i,j].size, clr_dark_grey, clr_dark_grey, clr_dark_grey, clr_dark_grey, TRUE)
 					endcase
 				endselect
 			next j
