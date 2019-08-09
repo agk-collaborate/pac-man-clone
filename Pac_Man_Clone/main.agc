@@ -9,7 +9,6 @@
 #include "source/pac-man.agc"
 #include "source/keys.agc"
 #include "source/editor.agc"
-#include "source/entities.agc"
 #include "source/game.agc"
 
 #constant APPSTATE_MAINMENU	0
