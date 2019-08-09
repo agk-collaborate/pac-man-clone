@@ -237,7 +237,7 @@ function DrawAllTiles(_map as t_Map)
 			for j = 0 to _map.tiles[i].length - 1
 				select _map.tiles[i,j].tileType
 					case TILETYPE_WALL:
-						DrawRange(_map.tiles[i,j].pos, _map.tiles[i,j].size, clr_light_blue, clr_light_blue, clr_light_blue, clr_light_blue, TRUE)
+						DrawRange(_map.tiles[i,j].pos, _map.tiles[i,j].size, clr_dodger_blue, clr_dodger_blue, clr_dodger_blue, clr_dodger_blue, TRUE)
 						DrawRange(_map.tiles[i,j].pos, _map.tiles[i,j].size, clr_violet, clr_violet, clr_violet, clr_violet, FALSE)
 					endcase
 					case TILETYPE_PATH:
