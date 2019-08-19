@@ -155,7 +155,7 @@ for B = 0 to ghostB.length
 next B
 
 	//Pinky
-for P = 0 to ghostP.lenght
+//for P = 0 to ghostP.lenght
 	if ghostP.created = 1
 		if ghostP.dir = 0
 			
@@ -176,10 +176,10 @@ for P = 0 to ghostP.lenght
 		endif
 		vec2_DrawEllipse(ghostP.pos, ghostP.size, clr_pink, clr_pink, TRUE)
 	endif
-next P
+//next P
 	
 	//Inky
-for I = 0 to ghostI.lenght
+//for I = 0 to ghostI.lenght
 	if ghostI.created = 1
 		if ghostI.dir = 0
 			
@@ -200,10 +200,10 @@ for I = 0 to ghostI.lenght
 		endif
 		vec2_DrawEllipse(ghostI.pos, ghostI.size, clr_cyan, clr_cyan, TRUE)
 	endif
-next I
+//next I
 	
 	//Clyde
-for C = 0 to ghostC.lenght
+//for C = 0 to ghostC.lenght
 	if ghostC.created = 1
 		if ghostC.dir = 0
 			
@@ -224,11 +224,11 @@ for C = 0 to ghostC.lenght
 		endif
 		vec2_DrawEllipse(ghostC.pos, ghostC.size, clr_orange, clr_orange, TRUE)
 	endif
-next i
+//next i
 endfunction
 
 function UpdateGhosts(ghostB ref as Ghost, ghostP ref as Ghost, ghostI ref as Ghost, ghostC ref as Ghost)
-	if ghostB[].created OR ghostP.created OR ghostI.created OR ghostC.created
+	if ghostB.created OR ghostP.created OR ghostI.created OR ghostC.created
 		updateGhostDirection()
 		updateGhostPosition()
 	endif
