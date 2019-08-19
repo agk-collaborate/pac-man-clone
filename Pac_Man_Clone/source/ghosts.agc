@@ -29,6 +29,7 @@ EXAMPLE:
 */
 
 type Ghost
+	aiType as integer
 	pos as t_Vector_2			//Ghost's position (x and y)
 	size as t_Vector_2			// Ghosts' size (width & height)
 	target as t_Vector_2		//Ghost's target's position (x and y)
@@ -70,55 +71,56 @@ function updateGhostTarget(_pm as pacman)
 	
 	updateScatterHomes()
 	
-	//Blinky
-	ghostB.target.x = _pm.pos.x
-	ghostP.target.y = _pm.pos.y
 		
-	//Pinky
-	if _pm.dir = 0
-		ghostP.targetHelp.X = -4
-		ghostP.targetHelp.Y = -4
-	elseif _pm.dir = 1
-		ghostP.targetHelp.X = 4
-		ghostP.targetHelp.Y = 0
-	elseif _pm.dir = 2
-		ghostP.targetHelp.X = 0
-		ghostP.targetHelp.Y = 4
-	elseif _pm.dir = 3
-		ghostP.targetHelp.X = -4
-		ghostP.targetHelp.Y = 0
-	endif
-	
-	ghostP.target.X = _pm.pos.X + ghostP.targetHelp.X
-	ghostP.target.Y = _pm.pos.Y + ghostP.targetHelp.Y
-	
-	//Inky
-	if _pm.dir = 0
-		ghostI.targetHelp.X = -2
-		ghostI.targetHelp.Y = -2
-	elseif _pm.dir = 1
-		ghostI.targetHelp.X = 2
-		ghostI.targetHelp.Y = 0
-	elseif _pm.dir = 2
-		ghostI.targetHelp.X = 0
-		ghostI.targetHelp.Y = 2
-	elseif _pm.dir = 3
-		ghostI.targetHelp.X = -2
-		ghostI.targetHelp.Y = 0
-	endif
-	
-	ghostI.targetHelp.X = _pm.pos.X + ghostI.targetHelp.X - ghostB.pos.X
-	ghostI.targetHelp.Y = _pm.pos.Y + ghostI.targetHelp.Y - ghostB.pos.Y
-	
-	//Clyde
-	ghostC.distToPac = vec2_Distance(ghostC.pos, _pm.pos)
-	if  ghostC.distToPac > 8
-		ghostC.target.X = _pm.pos.X
-		ghostC.target.Y = _pm.pos.Y
-	else
-		ghostC.target.X = CscatterHome.X
-		ghostC.target.Y = CscatterHome.Y
-	endif
+		//Blinky
+		ghostB.target.x = _pm.pos.x
+		ghostP.target.y = _pm.pos.y
+			
+		//Pinky
+		if _pm.dir = 0
+			ghostP.targetHelp.X = -4
+			ghostP.targetHelp.Y = -4
+		elseif _pm.dir = 1
+			ghostP.targetHelp.X = 4
+			ghostP.targetHelp.Y = 0
+		elseif _pm.dir = 2
+			ghostP.targetHelp.X = 0
+			ghostP.targetHelp.Y = 4
+		elseif _pm.dir = 3
+			ghostP.targetHelp.X = -4
+			ghostP.targetHelp.Y = 0
+		endif
+		
+		ghostP.target.X = _pm.pos.X + ghostP.targetHelp.X
+		ghostP.target.Y = _pm.pos.Y + ghostP.targetHelp.Y
+		
+		//Inky
+		if _pm.dir = 0
+			ghostI.targetHelp.X = -2
+			ghostI.targetHelp.Y = -2
+		elseif _pm.dir = 1
+			ghostI.targetHelp.X = 2
+			ghostI.targetHelp.Y = 0
+		elseif _pm.dir = 2
+			ghostI.targetHelp.X = 0
+			ghostI.targetHelp.Y = 2
+		elseif _pm.dir = 3
+			ghostI.targetHelp.X = -2
+			ghostI.targetHelp.Y = 0
+		endif
+		
+		ghostI.targetHelp.X = _pm.pos.X + ghostI.targetHelp.X - ghostB.pos.X
+		ghostI.targetHelp.Y = _pm.pos.Y + ghostI.targetHelp.Y - ghostB.pos.Y
+		
+		//Clyde
+		ghostC.distToPac = vec2_Distance(ghostC.pos, _pm.pos)
+		if  ghostC.distToPac > 8
+			ghostC.target.X = _pm.pos.X
+			ghostC.target.Y = _pm.pos.Y
+		else
+			ghostC.target.X = CscatterHome.X
+			ghostC.target.Y = CscatterHome.Y
+		endif
 	
 endfunction
 
