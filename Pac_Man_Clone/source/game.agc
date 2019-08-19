@@ -1,6 +1,7 @@
 /*
 CONTRIBUTORS:
 	IronManhood
+	SpeckyYT
 	
 DATE:
 	last updated 08/09/2019 by IronManhood
@@ -23,7 +24,10 @@ EXAMPLE:
 type t_Game
 	map as t_Map
 	pm as pacman
-	
+	gb as ghost
+	gp as ghost
+	gi as ghost
+	gc as ghost
 endtype
 
 
@@ -53,4 +57,5 @@ endfunction
 function UpdateGame(_g ref as t_Game)
 	DrawAllTiles(_g.map)
 	UpdatePacman(_g.pm, _g.map)
+	updateGhosts(_g.gb, _g.gp, _g.gi, _g.gc)
 endfunction

@@ -60,7 +60,7 @@ FILE_8=source%2Fvector2.agc;-1
 FILE_9=source%2Fgame.agc;-1
 
 [files]
-FILE_NAME_0=1;source%2Fghosts.agc;1168;0
+FILE_NAME_0=1;source%2Fghosts.agc;1644;0
 FILE_NAME_1=0;main.agc;1222;1
 FILE_NAME_2=0;source%2FmainMenu.agc;120;2
 FILE_NAME_3=0;source%2Fmap.agc;5913;3

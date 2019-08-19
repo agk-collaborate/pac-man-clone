@@ -2,6 +2,7 @@
 CONTRIBUTORS:
 	SpeckyYT
 	IronManhood
+	blubberdiblub
 	
 DATE:
 	last updated 08/09/2019 by IronManhood
@@ -67,7 +68,7 @@ function updateScatterHomes()
 
 endfunction
 
-function updateGhostTarget(_pm as pacman)
+function updateGhostTarget(_pm ref as pacman)
 	
 	updateScatterHomes()
 	
@@ -76,7 +77,7 @@ function updateGhostTarget(_pm as pacman)
 		for B = 1 to ghostB.length
 			ghostB[B].target.x = _pm.pos.x
 			ghostB[B].target.y = _pm.pos.y
-		next
+		next B
 			
 		//Pinky
 		if _pm.dir = 0
