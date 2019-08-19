@@ -73,8 +73,10 @@ function updateGhostTarget(_pm as pacman)
 	
 		
 		//Blinky
-		ghostB[].target.x = _pm.pos.x
-		ghostP.target.y = _pm.pos.y
+		for B = 1 to ghostB.length
+			ghostB[B].target.x = _pm.pos.x
+			ghostB[B].target.y = _pm.pos.y
+		next
 			
 		//Pinky
 		if _pm.dir = 0
@@ -109,8 +111,8 @@ function updateGhostTarget(_pm as pacman)
 			ghostI.targetHelp.Y = 0
 		endif
 		
-		ghostI.targetHelp.X = _pm.pos.X + ghostI.targetHelp.X - ghostB[].pos.X
-		ghostI.targetHelp.Y = _pm.pos.Y + ghostI.targetHelp.Y - ghostB[].pos.Y
+		ghostI.targetHelp.X = _pm.pos.X + ghostI.targetHelp.X - ghostB[1].pos.X
+		ghostI.targetHelp.Y = _pm.pos.Y + ghostI.targetHelp.Y - ghostB[1].pos.Y
 		
 		//Clyde
 		ghostC.distToPac = vec2_Distance(ghostC.pos, _pm.pos)
@@ -131,7 +133,7 @@ endfunction
 function updateGhostPosition()
 	
 	//Blinky
-for B = 0 to ghostB.length
+for B = 1 to ghostB.length
 	if ghostB[B].created = 1
 		if ghostB[B].dir = 0
 			
@@ -152,10 +154,9 @@ for B = 0 to ghostB.length
 		endif
 		vec2_DrawEllipse(ghostB[B].pos, ghostB[B].size, clr_red, clr_red, TRUE)
 	endif
-next B
+next
 
 	//Pinky
-for P = 0 to ghostP.length
 	if ghostP.created = 1
 		if ghostP.dir = 0
 			
@@ -176,10 +177,8 @@ for P = 0 to ghostP.length
 		endif
 		vec2_DrawEllipse(ghostP.pos, ghostP.size, clr_pink, clr_pink, TRUE)
 	endif
-next P
 	
 	//Inky
-for I = 0 to ghostI.length
 	if ghostI.created = 1
 		if ghostI.dir = 0
 			
@@ -200,10 +199,8 @@ for I = 0 to ghostI.length
 		endif
 		vec2_DrawEllipse(ghostI.pos, ghostI.size, clr_cyan, clr_cyan, TRUE)
 	endif
-next I
 	
 	//Clyde
-for C = 0 to ghostC.length
 	if ghostC.created = 1
 		if ghostC.dir = 0
 			
@@ -224,12 +221,9 @@ for C = 0 to ghostC.length
 		endif
 		vec2_DrawEllipse(ghostC.pos, ghostC.size, clr_orange, clr_orange, TRUE)
 	endif
-next i
 endfunction
 
 function UpdateGhosts(ghostB ref as Ghost, ghostP ref as Ghost, ghostI ref as Ghost, ghostC ref as Ghost)
-	if ghostB[].created OR ghostP.created OR ghostI.created OR ghostC.created
-		updateGhostDirection()
-		updateGhostPosition()
-	endif
+	updateGhostDirection()
+	updateGhostPosition()
 endfunction
