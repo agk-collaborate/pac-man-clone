@@ -30,22 +30,57 @@ EXAMPLE:
 */
 
 type Ghost
-	aiType as integer				//Ghost's AI type (0 Blinky, 1 Pinky, 2 Inky, 3 Clyde)
-	pos as t_Vector_2			//Ghost's position (x and y)
-	size as t_Vector_2			// Ghosts' size (width & height)
-	target as t_Vector_2		//Ghost's target's position (x and y)
-	targetHelp as t_Vector_2	//Help for the "misalignment" of the target (Y)
-	dir as integer				//Ghost's facing direction
-	house as integer			//If ghost is in the Ghost House or not
-	state as integer			//0 (eaten) / 1 (chase) / 2 (scatter) / 3 (frightened)
-	distToPac as integer		//Ghost's distance to Pac-Man
-	created as integer			// Will skip update calls if not created.
+    aiType as integer                //Ghost's AI type (0 Blinky, 1 Pinky, 2 Inky, 3 Clyde)
+    pos as t_Vector_2            //Ghost's position (x and y)
+    size as t_Vector_2            // Ghosts' size (width & height)
+    target as t_Vector_2        //Ghost's target's position (x and y)
+    targetHelp as t_Vector_2    //Help for the "misalignment" of the target (Y)
+    dir as integer                //Ghost's facing direction
+    house as integer            //If ghost is in the Ghost House or not
+    state as integer            //0 (eaten) / 1 (chase) / 2 (scatter) / 3 (frightened)
+    distToPac as integer        //Ghost's distance to Pac-Man
+    created as integer            // Will skip update calls if not created.
 endtype
 
-global ghostB as Ghost[10]
-global ghostP as Ghost
-global ghostI as Ghost
-global ghostC as Ghost
+function AddGhost(_gArr ref as Ghost[], _aiType)
+    _temp as Ghost
+    _temp.aiType = _aiType
+    // continue setting the rest of ghost variables, like pos, size, etc..
+    
+    // After filling the temp variable, insert the new ghost into the ghost array.
+    _gArr.insert(_temp)
+endfunction
+
+
+
+function UpdateGhost(_ghost as Ghost)
+    select _ghost.aiType
+        case 0: // Blinky
+            updateBlinkyTarget()
+        endcase
+
+        case 1: // Pinky
+            updatePinkyTarget()
+        endcase
+        
+        case 2: // Inky
+            updateInkyTarget()
+        endcase
+        
+        case 3: // Clyde
+            updateClydeTarget()
+        endcase
+    endselect
+endfunction
+
+
+function UpdateAllGhosts(_gArr ref as Ghost[])
+    if _gArr.length > -1
+        for i = 0 to _gArr.length - 1
+            UpdateGhost(_gArr[i])
+        next i
+    endif
+endfunction
 
 global BscatterHome as t_Vector_2
 global PscatterHome as t_Vector_2
@@ -68,64 +103,6 @@ function updateScatterHomes()
 
 endfunction
 
-function updateGhostTarget(_pm ref as pacman)
-	
-	updateScatterHomes()
-	
-		
-		//Blinky
-		for B = 1 to ghostB.length
-			ghostB[B].target.x = _pm.pos.x
-			ghostB[B].target.y = _pm.pos.y
-		next B
-			
-		//Pinky
-		if _pm.dir = 0
-			ghostP.targetHelp.X = -4
-			ghostP.targetHelp.Y = -4
-		elseif _pm.dir = 1
-			ghostP.targetHelp.X = 4
-			ghostP.targetHelp.Y = 0
-		elseif _pm.dir = 2
-			ghostP.targetHelp.X = 0
-			ghostP.targetHelp.Y = 4
-		elseif _pm.dir = 3
-			ghostP.targetHelp.X = -4
-			ghostP.targetHelp.Y = 0
-		endif
-		
-		ghostP.target.X = _pm.pos.X + ghostP.targetHelp.X
-		ghostP.target.Y = _pm.pos.Y + ghostP.targetHelp.Y
-		
-		//Inky
-		if _pm.dir = 0
-			ghostI.targetHelp.X = -2
-			ghostI.targetHelp.Y = -2
-		elseif _pm.dir = 1
-			ghostI.targetHelp.X = 2
-			ghostI.targetHelp.Y = 0
-		elseif _pm.dir = 2
-			ghostI.targetHelp.X = 0
-			ghostI.targetHelp.Y = 2
-		elseif _pm.dir = 3
-			ghostI.targetHelp.X = -2
-			ghostI.targetHelp.Y = 0
-		endif
-		
-		ghostI.targetHelp.X = _pm.pos.X + ghostI.targetHelp.X - ghostB[1].pos.X
-		ghostI.targetHelp.Y = _pm.pos.Y + ghostI.targetHelp.Y - ghostB[1].pos.Y
-		
-		//Clyde
-		ghostC.distToPac = vec2_Distance(ghostC.pos, _pm.pos)
-		if  ghostC.distToPac > 8
-			ghostC.target.X = _pm.pos.X
-			ghostC.target.Y = _pm.pos.Y
-		else
-			ghostC.target.X = CscatterHome.X
-			ghostC.target.Y = CscatterHome.Y
-		endif
-	
-endfunction
 
 function updateGhostDirection()
 	
@@ -134,7 +111,6 @@ endfunction
 function updateGhostPosition()
 	
 	//Blinky
-for B = 1 to ghostB.length
 	if ghostB[B].created = 1
 		if ghostB[B].dir = 0
 			
@@ -155,10 +131,8 @@ for B = 1 to ghostB.length
 		endif
 		vec2_DrawEllipse(ghostB[B].pos, ghostB[B].size, clr_red, clr_red, TRUE)
 	endif
-next B
 
 	//Pinky
-//for P = 0 to ghostP.lenght
 	if ghostP.created = 1
 		if ghostP.dir = 0
 			
@@ -179,10 +153,8 @@ next B
 		endif
 		vec2_DrawEllipse(ghostP.pos, ghostP.size, clr_pink, clr_pink, TRUE)
 	endif
-//next P
 	
 	//Inky
-//for I = 0 to ghostI.lenght
 	if ghostI.created = 1
 		if ghostI.dir = 0
 			
@@ -203,10 +175,8 @@ next B
 		endif
 		vec2_DrawEllipse(ghostI.pos, ghostI.size, clr_cyan, clr_cyan, TRUE)
 	endif
-//next I
 	
 	//Clyde
-//for C = 0 to ghostC.lenght
 	if ghostC.created = 1
 		if ghostC.dir = 0
 			
@@ -227,10 +197,59 @@ next B
 		endif
 		vec2_DrawEllipse(ghostC.pos, ghostC.size, clr_orange, clr_orange, TRUE)
 	endif
-//next i
 endfunction
 
-function UpdateGhosts(ghostB ref as Ghost, ghostP ref as Ghost, ghostI ref as Ghost, ghostC ref as Ghost)
-	updateGhostDirection()
-	updateGhostPosition()
+
+
+
+function updateBlinkyTarget()
+	ghostB[B].target.x = _pm.pos.x
+	ghostB[B].target.y = _pm.pos.y
+endfunction
+
+function updatePinkyTarget()
+	if _pm.dir = 0
+		ghostP.targetHelp.X = -4
+		ghostP.targetHelp.Y = -4
+	elseif _pm.dir = 1
+		ghostP.targetHelp.X = 4
+		ghostP.targetHelp.Y = 0
+	elseif _pm.dir = 2
+		ghostP.targetHelp.X = 0
+		ghostP.targetHelp.Y = 4
+	elseif _pm.dir = 3
+		ghostP.targetHelp.X = -4
+		ghostP.targetHelp.Y = 0
+	endif
+	ghostP.target.X = _pm.pos.X + ghostP.targetHelp.X
+	ghostP.target.Y = _pm.pos.Y + ghostP.targetHelp.Y
+endfunction
+
+function updateInkyTarget()
+	if _pm.dir = 0
+		ghostI.targetHelp.X = -2
+		ghostI.targetHelp.Y = -2
+	elseif _pm.dir = 1
+		ghostI.targetHelp.X = 2
+		ghostI.targetHelp.Y = 0
+	elseif _pm.dir = 2
+		ghostI.targetHelp.X = 0
+		ghostI.targetHelp.Y = 2
+	elseif _pm.dir = 3
+		ghostI.targetHelp.X = -2
+		ghostI.targetHelp.Y = 0
+	endif
+	ghostI.targetHelp.X = _pm.pos.X + ghostI.targetHelp.X - ghostB[1].pos.X
+	ghostI.targetHelp.Y = _pm.pos.Y + ghostI.targetHelp.Y - ghostB[1].pos.Y
+endfunction
+
+function updateClydeTarget()
+	ghostC.distToPac = vec2_Distance(ghostC.pos, _pm.pos)
+	if  ghostC.distToPac > 8
+		ghostC.target.X = _pm.pos.X
+		ghostC.target.Y = _pm.pos.Y
+	else
+		ghostC.target.X = CscatterHome.X
+		ghostC.target.Y = CscatterHome.Y
+	endif
 endfunction
