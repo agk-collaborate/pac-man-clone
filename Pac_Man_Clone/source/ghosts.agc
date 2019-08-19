@@ -41,7 +41,7 @@ type Ghost
 	created as integer			// Will skip update calls if not created.
 endtype
 
-global ghostB as Ghost
+global ghostB as Ghost[10]
 global ghostP as Ghost
 global ghostI as Ghost
 global ghostC as Ghost
@@ -73,7 +73,7 @@ function updateGhostTarget(_pm as pacman)
 	
 		
 		//Blinky
-		ghostB.target.x = _pm.pos.x
+		ghostB[].target.x = _pm.pos.x
 		ghostP.target.y = _pm.pos.y
 			
 		//Pinky
@@ -109,8 +109,8 @@ function updateGhostTarget(_pm as pacman)
 			ghostI.targetHelp.Y = 0
 		endif
 		
-		ghostI.targetHelp.X = _pm.pos.X + ghostI.targetHelp.X - ghostB.pos.X
-		ghostI.targetHelp.Y = _pm.pos.Y + ghostI.targetHelp.Y - ghostB.pos.Y
+		ghostI.targetHelp.X = _pm.pos.X + ghostI.targetHelp.X - ghostB[].pos.X
+		ghostI.targetHelp.Y = _pm.pos.Y + ghostI.targetHelp.Y - ghostB[].pos.Y
 		
 		//Clyde
 		ghostC.distToPac = vec2_Distance(ghostC.pos, _pm.pos)
@@ -131,28 +131,31 @@ endfunction
 function updateGhostPosition()
 	
 	//Blinky
-	if ghostB.created = 1
-		if ghostB.dir = 0
+for B = 0 to ghostB.length
+	if ghostB[B].created = 1
+		if ghostB[B].dir = 0
 			
-			ghostB.pos.y =  ghostB.pos.y - 1
+			ghostB[B].pos.y = ghostB[B].pos.y - 1
 		
-		elseif ghostB.dir = 1
+		elseif ghostB[B].dir = 1
 			
-			ghostB.pos.x = ghostB.pos.x - 1
+			ghostB[B].pos.x = ghostB[B].pos.x - 1
 		
-		elseif ghostB.dir = 2
+		elseif ghostB[B].dir = 2
 			
-			ghostB.pos.y = ghostB.pos.y + 1
+			ghostB[B].pos.y = ghostB[B].pos.y + 1
 			
-		elseif ghostB.dir = 3
+		elseif ghostB[B].dir = 3
 			
-			ghostB.pos.x = ghostB.pos.x + 1
+			ghostB[B].pos.x = ghostB[B].pos.x + 1
 		
 		endif
-		vec2_DrawEllipse(ghostB.pos, ghostB.size, clr_red, clr_red, TRUE)
+		vec2_DrawEllipse(ghostB[B].pos, ghostB[B].size, clr_red, clr_red, TRUE)
 	endif
-	
+next B
+
 	//Pinky
+for P = 0 to ghostP.lenght
 	if ghostP.created = 1
 		if ghostP.dir = 0
 			
@@ -173,8 +176,10 @@ function updateGhostPosition()
 		endif
 		vec2_DrawEllipse(ghostP.pos, ghostP.size, clr_pink, clr_pink, TRUE)
 	endif
+next P
 	
 	//Inky
+for I = 0 to ghostI.lenght
 	if ghostI.created = 1
 		if ghostI.dir = 0
 			
@@ -195,8 +200,10 @@ function updateGhostPosition()
 		endif
 		vec2_DrawEllipse(ghostI.pos, ghostI.size, clr_cyan, clr_cyan, TRUE)
 	endif
+next I
 	
 	//Clyde
+for C = 0 to ghostC.lenght
 	if ghostC.created = 1
 		if ghostC.dir = 0
 			
@@ -217,10 +224,11 @@ function updateGhostPosition()
 		endif
 		vec2_DrawEllipse(ghostC.pos, ghostC.size, clr_orange, clr_orange, TRUE)
 	endif
+next i
 endfunction
 
 function UpdateGhosts(ghostB ref as Ghost, ghostP ref as Ghost, ghostI ref as Ghost, ghostC ref as Ghost)
-	if ghostB.created OR ghostP.created OR ghostI.created OR ghostC.created
+	if ghostB[].created OR ghostP.created OR ghostI.created OR ghostC.created
 		updateGhostDirection()
 		updateGhostPosition()
 	endif
