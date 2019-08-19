@@ -73,8 +73,10 @@ function updateGhostTarget(_pm as pacman)
 	
 		
 		//Blinky
-		ghostB[].target.x = _pm.pos.x
-		ghostP.target.y = _pm.pos.y
+		for B = 1 to ghostB.length
+			ghostB[B].target.x = _pm.pos.x
+			ghostB[B].target.y = _pm.pos.y
+		next
 			
 		//Pinky
 		if _pm.dir = 0
@@ -109,8 +111,8 @@ function updateGhostTarget(_pm as pacman)
 			ghostI.targetHelp.Y = 0
 		endif
 		
-		ghostI.targetHelp.X = _pm.pos.X + ghostI.targetHelp.X - ghostB[].pos.X
-		ghostI.targetHelp.Y = _pm.pos.Y + ghostI.targetHelp.Y - ghostB[].pos.Y
+		ghostI.targetHelp.X = _pm.pos.X + ghostI.targetHelp.X - ghostB[1].pos.X
+		ghostI.targetHelp.Y = _pm.pos.Y + ghostI.targetHelp.Y - ghostB[1].pos.Y
 		
 		//Clyde
 		ghostC.distToPac = vec2_Distance(ghostC.pos, _pm.pos)
@@ -131,7 +133,7 @@ endfunction
 function updateGhostPosition()
 	
 	//Blinky
-for B = 0 to ghostB.length
+for B = 1 to ghostB.length
 	if ghostB[B].created = 1
 		if ghostB[B].dir = 0
 			
@@ -228,8 +230,6 @@ next B
 endfunction
 
 function UpdateGhosts(ghostB ref as Ghost, ghostP ref as Ghost, ghostI ref as Ghost, ghostC ref as Ghost)
-	if ghostB.created OR ghostP.created OR ghostI.created OR ghostC.created
-		updateGhostDirection()
-		updateGhostPosition()
-	endif
+	updateGhostDirection()
+	updateGhostPosition()
 endfunction
