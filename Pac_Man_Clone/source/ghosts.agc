@@ -29,7 +29,7 @@ EXAMPLE:
 */
 
 type Ghost
-	aiType as integer
+	aiType as integer				//Ghost's AI type (0 Blinky, 1 Pinky, 2 Inky, 3 Clyde)
 	pos as t_Vector_2			//Ghost's position (x and y)
 	size as t_Vector_2			// Ghosts' size (width & height)
 	target as t_Vector_2		//Ghost's target's position (x and y)
