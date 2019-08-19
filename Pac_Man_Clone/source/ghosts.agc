@@ -155,7 +155,7 @@ for B = 0 to ghostB.length
 next B
 
 	//Pinky
-for P = 0 to ghostP.lenght
+for P = 0 to ghostP.length
 	if ghostP.created = 1
 		if ghostP.dir = 0
 			
@@ -179,7 +179,7 @@ for P = 0 to ghostP.lenght
 next P
 	
 	//Inky
-for I = 0 to ghostI.lenght
+for I = 0 to ghostI.length
 	if ghostI.created = 1
 		if ghostI.dir = 0
 			
@@ -203,7 +203,7 @@ for I = 0 to ghostI.lenght
 next I
 	
 	//Clyde
-for C = 0 to ghostC.lenght
+for C = 0 to ghostC.length
 	if ghostC.created = 1
 		if ghostC.dir = 0
 			
