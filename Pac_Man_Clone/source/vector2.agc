@@ -167,7 +167,7 @@ endfunction _ret#
 
 // Return the distance between two vectors.
 function vec2_Distance(_v1 as t_Vector_2, _v2 as t_Vector_2)
-	_ret# = (_v2.x - _v1.x) ^ 2 + (_v2.y - _v1.y) ^ 2
+	_ret# = sqrt((_v2.x - _v1.x) ^ 2 + (_v2.y - _v1.y) ^ 2)
 endfunction _ret#
 
 // A wrapper for using vector2 with draw line.
